@@ -21,6 +21,8 @@ SOURCES += main.cpp\
 HEADERS  += MainWindow.h \
     c_index_model.h \
     a_node.h \
-    data/c_package.h
+    data/c_package.h \
+    data/exception.h \
+    data/s_package_header.h
 
 FORMS    += MainWindow.ui
