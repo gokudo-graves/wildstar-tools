@@ -1,11 +1,11 @@
-#include "data/c_archive_index.h"
+#include "wildstar/data/c_archive_index.h"
 
 #include <cstring>
 
 #include <QBuffer>
 #include <QDataStream>
 
-#include "data/exception.h"
+#include "wildstar/data/exception.h"
 
 namespace wildstar
 {

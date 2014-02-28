@@ -1,9 +1,9 @@
-#include "data/c_package.h"
+#include "wildstar/data/c_package.h"
 
 #include <cstring>
 #include <QDataStream>
 
-#include "data/exception.h"
+#include "wildstar/data/exception.h"
 
 namespace wildstar
 {

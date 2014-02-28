@@ -3,12 +3,14 @@
 
 #include <exception>
 
+#include "global.h"
+
 namespace wildstar
 {
     namespace data
     {
         //----------------------------------------------------------------------
-        class EInvalidFile : public std::exception
+        class WILDSTAR_DATA_SHARED EInvalidFile : public std::exception
         {
         public:
             EInvalidFile() {}
@@ -20,7 +22,7 @@ namespace wildstar
         };
 
         //----------------------------------------------------------------------
-        class EInvalidFileNotExist : public EInvalidFile
+        class WILDSTAR_DATA_SHARED EInvalidFileNotExist : public EInvalidFile
         {
         public:
             EInvalidFileNotExist() {}
@@ -32,7 +34,7 @@ namespace wildstar
         };
 
         //----------------------------------------------------------------------
-        class EInvalidFileSize : public EInvalidFile
+        class WILDSTAR_DATA_SHARED EInvalidFileSize : public EInvalidFile
         {
         public:
             EInvalidFileSize() {}
@@ -44,7 +46,7 @@ namespace wildstar
         };
 
         //----------------------------------------------------------------------
-        class EInvalidFileNotReadable : public EInvalidFile
+        class WILDSTAR_DATA_SHARED EInvalidFileNotReadable : public EInvalidFile
         {
         public:
             EInvalidFileNotReadable() {}
@@ -56,7 +58,7 @@ namespace wildstar
         };
 
         //----------------------------------------------------------------------
-        class EInvalidFileSignature : public EInvalidFile
+        class WILDSTAR_DATA_SHARED EInvalidFileSignature : public EInvalidFile
         {
         public:
             EInvalidFileSignature() {}
@@ -68,7 +70,7 @@ namespace wildstar
         };
 
         //----------------------------------------------------------------------
-        class EInvalidFileVersion : public EInvalidFile
+        class WILDSTAR_DATA_SHARED EInvalidFileVersion : public EInvalidFile
         {
         public:
             EInvalidFileVersion() {}
@@ -80,7 +82,7 @@ namespace wildstar
         };
 
         //----------------------------------------------------------------------
-        class EInvalidFileHeader : public EInvalidFile
+        class WILDSTAR_DATA_SHARED EInvalidFileHeader : public EInvalidFile
         {
         public:
             EInvalidFileHeader() {}

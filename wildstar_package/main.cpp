@@ -15,18 +15,38 @@ GNU General Public License for more details.
 -----------------------------------------------------------------------------
 */
 
+#include <QCommandLineOption>
+#include <QCommandLineParser>
+#include <QCoreApplication>
 #include <QDebug>
 
-#include "data/c_archive_index.h"
-#include "data/c_package.h"
+#include "wildstar/data/c_archive_index.h"
+#include "wildstar/data/c_package.h"
 
 using namespace wildstar;
 using namespace wildstar::data;
 
 int main(int argc, char *argv[])
 {
-    //CPackage file("D:/game/WildStar/Patch/ClientData.index");
-    CArchiveIndex file("D:/game/WildStar/Patch/ClientData.index");
+    QCoreApplication app(argc, argv);
+    app.setApplicationVersion( "0.0.1" );
+
+    QCommandLineParser parser;
+    parser.setApplicationDescription( app.translate("main", "application-description") );
+    parser.addHelpOption();
+    parser.addVersionOption();
+
+    parser.addPositionalArgument("filename", app.translate("main", "application-parameter-filename"));
+
+    parser.process( app );
+    const QStringList args( parser.positionalArguments() );
+
+    if( args.size() != 1 )
+    {
+        parser.showHelp( 1 );
+    }
+    QString filename( args.at( 0 ) );
+    CArchiveIndex file( filename );
 
     try
     {

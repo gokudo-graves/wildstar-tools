@@ -5,26 +5,24 @@
 #-------------------------------------------------
 
 QT       += core
+QT       -= gui
 
-TARGET = wildstar_package
+CONFIG   += console
+CONFIG   -= app_bundle
+
 TEMPLATE = app
 
-
 SOURCES += main.cpp\
-    c_index_model.cpp \
-    a_node.cpp \
-    data/c_package.cpp \
-    data/c_archive_index.cpp \
-    data/c_index_directory_node.cpp \
-    data/c_index_file_node.cpp \
-    data/a_index_node.cpp
 
 HEADERS  += \
-    c_index_model.h \
-    a_node.h \
-    data/c_package.h \
-    data/exception.h \
-    data/c_archive_index.h \
-    data/c_index_directory_node.h \
-    data/c_index_file_node.h \
-    data/a_index_node.h
+
+CONFIG( debug, debug|release ) {
+    TARGET = wildstar_package_d
+    LIBS += -L$$OUT_PWD/../wildstar_data/debug/ -lwildstar_data_d
+} else {
+    TARGET = wildstar_package
+    LIBS += -L$$OUT_PWD/../wildstar_data/release/ -lwildstar_data
+}
+
+INCLUDEPATH += $$PWD/../wildstar_data/include
+DEPENDPATH += $$PWD/../wildstar_data/include

@@ -11,7 +11,7 @@ namespace wildstar
     {
         class CIndexDirectoryNode;
 
-        class CIndexFileNode : public AIndexNode
+        class WILDSTAR_DATA_SHARED CIndexFileNode : public AIndexNode
         {
         public:
             enum {
@@ -32,8 +32,7 @@ namespace wildstar
             quint32     unknown_34_; // mabye padding to put sha-1 in 3 uint64
         };
 
-        QDataStream& operator>>( QDataStream& stream, CIndexFileNode* file );
-
+        WILDSTAR_DATA_SHARED QDataStream& operator>>( QDataStream& stream, CIndexFileNode* file );
     }
 }
 

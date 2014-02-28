@@ -13,7 +13,7 @@ namespace wildstar
 {
     namespace data
     {
-        class CIndexDirectoryNode : public AIndexNode
+        class WILDSTAR_DATA_SHARED CIndexDirectoryNode : public AIndexNode
         {
         public:
             struct Header
@@ -50,7 +50,7 @@ namespace wildstar
             FileList        files_;
         };
 
-        QDataStream& operator>>( QDataStream& stream, CIndexDirectoryNode::Header& header );
+        WILDSTAR_DATA_SHARED QDataStream& operator>>( QDataStream& stream, CIndexDirectoryNode::Header& header );
     }
 }
 

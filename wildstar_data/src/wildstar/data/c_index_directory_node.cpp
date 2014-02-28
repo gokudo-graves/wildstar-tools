@@ -1,9 +1,9 @@
-#include "data/c_index_directory_node.h"
+#include "wildstar/data/c_index_directory_node.h"
 
 #include <QBuffer>
 #include <QDataStream>
 
-#include "data/exception.h"
+#include "wildstar/data/exception.h"
 
 namespace wildstar
 {

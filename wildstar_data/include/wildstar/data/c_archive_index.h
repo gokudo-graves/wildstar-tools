@@ -8,7 +8,7 @@ namespace wildstar
 {
     namespace data
     {
-        class CArchiveIndex
+        class WILDSTAR_DATA_SHARED CArchiveIndex
         {
         public:
             struct Header
@@ -44,7 +44,7 @@ namespace wildstar
             CIndexDirectoryNode     root_;
         };
 
-        QDataStream& operator>>( QDataStream& stream, CArchiveIndex::Header& header );
+        WILDSTAR_DATA_SHARED QDataStream& operator>>( QDataStream& stream, CArchiveIndex::Header& header );
     }
 }
 

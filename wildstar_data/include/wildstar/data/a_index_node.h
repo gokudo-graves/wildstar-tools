@@ -3,13 +3,15 @@
 
 #include <QString>
 
+#include "global.h"
+
 namespace wildstar
 {
     namespace data
     {
         class CIndexDirectoryNode;
 
-        class AIndexNode
+        class WILDSTAR_DATA_SHARED AIndexNode
         {
         public:
             explicit AIndexNode( CIndexDirectoryNode* parent );

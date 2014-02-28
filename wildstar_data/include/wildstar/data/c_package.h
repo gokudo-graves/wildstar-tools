@@ -3,11 +3,13 @@
 
 #include <QFile>
 
+#include "global.h"
+
 namespace wildstar
 {
     namespace data
     {
-        class CPackage
+        class WILDSTAR_DATA_SHARED CPackage
         {
         public:
             struct Header
@@ -68,8 +70,8 @@ namespace wildstar
             QList<BlockDescription>     blocks_;
         };
 
-        QDataStream& operator>>( QDataStream& stream, CPackage::Header& header );
-        QDataStream& operator>>( QDataStream& stream, CPackage::BlockDescription& description );
+        WILDSTAR_DATA_SHARED QDataStream& operator>>( QDataStream& stream, CPackage::Header& header );
+        WILDSTAR_DATA_SHARED QDataStream& operator>>( QDataStream& stream, CPackage::BlockDescription& description );
     }
 }
 #endif // WILDSTAR_DATA_C_PACKAGE_H

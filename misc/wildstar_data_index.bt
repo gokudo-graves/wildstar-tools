@@ -55,11 +55,11 @@ struct IndexDirectoryEntry
 struct IndexFileEntry
 {
     uint32      file_name_offset;
-    uint32      unknown_00; // unused
+    uint32      unknown_04; // unused
     FILETIME    file_time;
     uint64      file_size[2];
     char        hash[20]; // sha-1
-    uint32      unknown_02; // mabye padding to put sha-1 in 3 uint64
+    uint32      unknown_34; // mabye padding to put sha-1 in 3 uint64
 };
 
 struct String
