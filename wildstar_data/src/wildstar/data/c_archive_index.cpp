@@ -86,7 +86,7 @@ namespace wildstar
         CArchiveIndex::directory( const QString& path ) const
         {
             const CIndexDirectoryNode* node( &root_ );
-            QStringList paths( path.split( SEPERATOR ) );
+            QStringList paths( path.split( SEPERATOR, QString::SkipEmptyParts ) );
             while( !paths.isEmpty() && node != NULL )
             {
                 QString name( paths.front() );

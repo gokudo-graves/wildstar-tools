@@ -10,12 +10,14 @@ using wildstar::data::CIndexDirectoryNode;
 using wildstar::data::CIndexFileNode;
 
 //------------------------------------------------------------------------------
-const QCommandLineOption    CListCommand::SUB_FOLDER_OPTION(QStringList() << "s" << "sub-folder", "application-parameter-sub-folder", "sub-folder");
-const QCommandLineOption    CListCommand::LONG_LISTING_OPTION(QStringList() << "l" << "long-listing", "application-parameter-long-listing");
+const QCommandLineOption    CListCommand::OPTION_SUB_FOLDER(QStringList() << "s" << "sub-folder", "application-parameter-sub-folder", "sub-folder");
+const QCommandLineOption    CListCommand::OPTION_LONG_LISTING(QStringList() << "l" << "long-listing", "application-parameter-long-listing");
+const QCommandLineOption    CListCommand::OPTION_NO_DIRECTORIES(QStringList() << "d" << "no-directories", "application-parameter-no-directories");
 
 //------------------------------------------------------------------------------
 CListCommand::CListCommand() :
     long_listing_( false )
+  , show_directories_( true )
 {
 }
 
@@ -26,8 +28,9 @@ CListCommand::options( QCommandLineParser& parser ) const
     parser.addPositionalArgument("list", "application-parameter-command-list", "list");
     parser.addPositionalArgument("index-file", "application-parameter-index-file", "*.index");
 
-    parser.addOption( SUB_FOLDER_OPTION );
-    parser.addOption( LONG_LISTING_OPTION );
+    parser.addOption( OPTION_SUB_FOLDER );
+    parser.addOption( OPTION_LONG_LISTING );
+    parser.addOption( OPTION_NO_DIRECTORIES );
 }
 
 //------------------------------------------------------------------------------
@@ -44,14 +47,15 @@ CListCommand::execute( QCommandLineParser& parser )
     CArchiveIndex file( filename );
 
     file.open();
-    QString path( parser.value( SUB_FOLDER_OPTION ) );
+    QString path( parser.value( OPTION_SUB_FOLDER ) );
     const CIndexDirectoryNode* node( file.directory( path ) );
     if( node == NULL )
     {
         std::cout << qPrintable(path) << ": Directory not found.\n";
         return 1;
     }
-    long_listing_ = parser.isSet( LONG_LISTING_OPTION );
+    long_listing_ = parser.isSet( OPTION_LONG_LISTING );
+    show_directories_ = !parser.isSet( OPTION_NO_DIRECTORIES );
     print( node );
     return 0;
 }
@@ -69,11 +73,14 @@ CListCommand::print( const CIndexDirectoryNode* node, const QString& path ) cons
     foreach( const CIndexDirectoryNode* const & directory, node->directories() )
     {
         const QString& name( directory->name() );
-        if( long_listing_  )
+        if( show_directories_ )
         {
-            std::cout << std::setw(21) << " ";
+            if( long_listing_  )
+            {
+                std::cout << std::setw(21) << " ";
+            }
+            std::cout << qPrintable( prefix ) << qPrintable( name ) << "\n";
         }
-        std::cout << qPrintable( prefix ) << qPrintable( name ) << "\n";
         print( directory, prefix + name );
     }
 

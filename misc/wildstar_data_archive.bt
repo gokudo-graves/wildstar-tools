@@ -45,7 +45,7 @@ struct ArchiveHeader
 {
     uint32 magic;
     uint32 version;
-    uint32 unkown_8;
+    uint32 file_count;
     uint32 unkown_a;
 };
 

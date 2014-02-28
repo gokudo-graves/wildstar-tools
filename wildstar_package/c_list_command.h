@@ -19,9 +19,11 @@ private:
     virtual void print( const wildstar::data::CIndexDirectoryNode* node, const QString& path = "" ) const;
 
     bool long_listing_;
+    bool show_directories_;
 
-    static const QCommandLineOption     SUB_FOLDER_OPTION;
-    static const QCommandLineOption     LONG_LISTING_OPTION;
+    static const QCommandLineOption     OPTION_SUB_FOLDER;
+    static const QCommandLineOption     OPTION_LONG_LISTING;
+    static const QCommandLineOption     OPTION_NO_DIRECTORIES;
 };
 
 #endif // C_LIST_COMMAND_H
