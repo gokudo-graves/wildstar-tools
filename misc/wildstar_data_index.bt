@@ -21,11 +21,12 @@ struct PackageHeader
     uint64  unkown_008[64];
     uint64  file_size;
     uint64  unkown_210;
-    uint64  block_list_offset;
+    uint64  block_descriptions_offset;
     uint32  block_count;
     uint32  unkown_224_block_index; // some block index
     uint32  type_block_index;
-    uint32  unkown_22C[3];
+    uint32  unkown_22C;
+    uint32  unkown_230[2]; // unused
 };
 
 struct PackageBlock
@@ -41,7 +42,7 @@ struct IndexHeader
     uint32 magic;
     uint32 version;
     uint32 client_build;
-    uint32 client_version; // maybe root_block?
+    uint32 root_block;
 };
 
 struct IndexDirectoryEntry
