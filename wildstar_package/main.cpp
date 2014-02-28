@@ -31,6 +31,10 @@ int main(int argc, char *argv[])
     try
     {
         file.open();
+        const CIndexDirectoryNode::DirectoryList& directories( file.root().directories() );
+        foreach( CIndexDirectoryNode* const & directory, directories ) {
+            qDebug() << directory->name();
+        }
     }
     catch ( std::exception& e )
     {

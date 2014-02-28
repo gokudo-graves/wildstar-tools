@@ -19,8 +19,15 @@ namespace wildstar
         }
 
         //----------------------------------------------------------------------
+        const QString&
+        AIndexNode::name()
+        {
+            return name_;
+        }
+
+        //----------------------------------------------------------------------
         void
-        AIndexNode::setName( const QString& name )
+        AIndexNode::setName( const char* name )
         {
             name_ = name;
         }

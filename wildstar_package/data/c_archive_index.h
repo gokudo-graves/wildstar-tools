@@ -29,6 +29,8 @@ namespace wildstar
 
             virtual void open();
 
+            const CIndexDirectoryNode& root() const;
+
         protected:
             virtual void clear();
 

@@ -20,9 +20,20 @@ namespace wildstar
         }
 
         //----------------------------------------------------------------------
-        QDataStream&
-        operator>>( QDataStream& stream, CIndexFileNode::Data& data )
+        void
+        CIndexFileNode::read( QDataStream& stream )
         {
+            stream >> unknown_04_
+                   >> file_time_ >> size_ >> compressed_size_;
+            stream.readRawData( hash_, HASH_LENGTH );
+            stream >> unknown_34_;
+        }
+
+        //----------------------------------------------------------------------
+        QDataStream&
+        operator>>( QDataStream& stream, CIndexFileNode* file )
+        {
+            file->read( stream );
             return stream;
         }
 

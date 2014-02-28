@@ -3,32 +3,37 @@
 
 #include <QString>
 
-#include "c_index_directory_node.h"
+#include "a_index_node.h"
 
 namespace wildstar
 {
     namespace data
     {
+        class CIndexDirectoryNode;
+
         class CIndexFileNode : public AIndexNode
         {
         public:
-            struct Data
-            {
-                quint32     name_offset;
-                quint32     unknown_00;
-                quint64     file_time;
-                quint64     file_size[2];
-                char        hash[20]; // sha-1
-                quint32     unknown_02; // mabye padding to put sha-1 in 3 uint64
+            enum {
+                HASH_LENGTH = 20
             };
 
             explicit CIndexFileNode( CIndexDirectoryNode* parent );
             virtual ~CIndexFileNode();
 
+            virtual void read( QDataStream& stream );
+
         private:
+            quint32     unknown_04_;
+            quint64     file_time_;
+            quint64     size_;
+            quint64     compressed_size_;
+            char        hash_[HASH_LENGTH]; // sha-1
+            quint32     unknown_34_; // mabye padding to put sha-1 in 3 uint64
         };
 
-        QDataStream& operator>>( QDataStream& stream, CIndexFileNode::Data& data );
+        QDataStream& operator>>( QDataStream& stream, CIndexFileNode* file );
+
     }
 }
 

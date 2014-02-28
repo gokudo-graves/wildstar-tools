@@ -47,6 +47,8 @@ namespace wildstar
 
             virtual void open();
 
+            virtual quint32 getBlockCount() const;
+
             virtual QByteArray read( qint64 offset, qint64 bytes );
             virtual QByteArray readBlock( quint32 index );
             virtual QByteArray readTypeBlock();

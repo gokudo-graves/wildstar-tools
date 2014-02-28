@@ -31,6 +31,13 @@ namespace wildstar
         }
 
         //----------------------------------------------------------------------
+        quint32
+        CPackage::getBlockCount() const
+        {
+            return header_.block_count;
+        }
+
+        //----------------------------------------------------------------------
         QByteArray
         CPackage::read( qint64 offset, qint64 bytes )
         {

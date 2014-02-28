@@ -15,7 +15,10 @@ namespace wildstar
             explicit AIndexNode( CIndexDirectoryNode* parent );
             virtual ~AIndexNode();
 
-            virtual void setName( const QString& name );
+            virtual const QString& name();
+            virtual void setName( const char* name );
+
+        protected:
 
         private:
             QString                 name_;

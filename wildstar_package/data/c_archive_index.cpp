@@ -69,6 +69,13 @@ namespace wildstar
         }
 
         //----------------------------------------------------------------------
+        const CIndexDirectoryNode&
+        CArchiveIndex::root() const
+        {
+            return root_;
+        }
+        
+        //----------------------------------------------------------------------
         QDataStream&
         operator>>( QDataStream& stream, CArchiveIndex::Header& header )
         {
