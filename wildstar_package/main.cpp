@@ -32,11 +32,9 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
 
-    parser.addPositionalArgument("command", app.translate("main", "application-parameter-command"), "list|build-version");
+    parser.addPositionalArgument("command", app.translate("main", "application-parameter-command"), "list");
     parser.parse( app.arguments() );
     const QStringList args( parser.positionalArguments() );
-    parser.clearPositionalArguments();
-
     if( args.isEmpty() )
     {
         parser.showHelp( 1 );
@@ -48,6 +46,11 @@ int main(int argc, char *argv[])
     if (command_name == "list") {
         command = &list;
     }
+    if( command == NULL )
+    {
+        parser.showHelp( 1 );
+    }
+    parser.clearPositionalArguments();
     command->options( parser );
     parser.process( app );
 

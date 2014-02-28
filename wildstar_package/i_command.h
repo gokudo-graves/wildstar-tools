@@ -9,7 +9,7 @@ public:
     virtual ~ICommand() {}
 
     virtual void options( QCommandLineParser& parser ) const = 0;
-    virtual int execute( QCommandLineParser& parser ) const = 0;
+    virtual int execute( QCommandLineParser& parser ) = 0;
 };
 
 #endif // I_COMMAND_H

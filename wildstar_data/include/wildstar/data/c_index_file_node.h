@@ -23,6 +23,9 @@ namespace wildstar
 
             virtual void read( QDataStream& stream );
 
+            virtual quint64 size() const;
+            virtual quint64 compressed_size() const;
+
         private:
             quint32     unknown_04_;
             quint64     file_time_;
