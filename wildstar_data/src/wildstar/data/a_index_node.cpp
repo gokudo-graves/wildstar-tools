@@ -20,7 +20,7 @@ namespace wildstar
 
         //----------------------------------------------------------------------
         const QString&
-        AIndexNode::name()
+        AIndexNode::name() const
         {
             return name_;
         }

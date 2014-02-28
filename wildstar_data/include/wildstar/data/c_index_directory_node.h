@@ -36,6 +36,7 @@ namespace wildstar
 
             virtual void clear();
             virtual void load( quint32 block_index, CPackage& package );
+            const CIndexDirectoryNode* directory( const QString& name ) const;
 
             virtual const DirectoryList& directories() const;
             virtual const FileList& files() const;

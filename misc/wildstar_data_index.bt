@@ -47,14 +47,14 @@ struct IndexHeader
 
 struct IndexDirectoryEntry
 {
-    uint32      file_name_offset;
+    uint32      name_offset;
     uint32      block_index;
     //Printf( "directory_unknown: %x\n",  unknown_04);
 };
 
 struct IndexFileEntry
 {
-    uint32      file_name_offset;
+    uint32      name_offset;
     uint32      unknown_04; // unused
     FILETIME    file_time;
     uint64      file_size[2];

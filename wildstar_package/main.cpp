@@ -15,16 +15,35 @@ GNU General Public License for more details.
 -----------------------------------------------------------------------------
 */
 
+#include <iostream>
+
+#include <QDebug>
+
 #include <QCommandLineOption>
 #include <QCommandLineParser>
 #include <QCoreApplication>
-#include <QDebug>
 
 #include "wildstar/data/c_archive_index.h"
 #include "wildstar/data/c_package.h"
 
 using namespace wildstar;
 using namespace wildstar::data;
+
+void print( const CIndexDirectoryNode& node, const QString& path = "" )
+{
+    QString prefix( path + "/" );
+    foreach( const CIndexDirectoryNode* const & directory, node.directories() ) {
+        const QString& name( directory->name() );
+        std::cout << qPrintable( prefix ) << qPrintable( name ) << "\n";
+        print( *directory, prefix + name );
+    }
+
+    foreach( const CIndexFileNode* const & file, node.files() ) {
+        const QString& name( file->name() );
+        std::cout << qPrintable( prefix ) << qPrintable( name )
+                  << "\n";
+    }
+}
 
 int main(int argc, char *argv[])
 {
@@ -36,7 +55,10 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
 
-    parser.addPositionalArgument("filename", app.translate("main", "application-parameter-filename"));
+    parser.addPositionalArgument("filename", app.translate("main", "application-parameter-filename"), "*.index");
+
+    QCommandLineOption sub_folder(QStringList() << "s" << "sub-folder", app.translate("main", "application-parameter-sub-folder"), "sub-folder");
+    parser.addOption(sub_folder);
 
     parser.process( app );
     const QStringList args( parser.positionalArguments() );
@@ -51,10 +73,14 @@ int main(int argc, char *argv[])
     try
     {
         file.open();
-        const CIndexDirectoryNode::DirectoryList& directories( file.root().directories() );
-        foreach( CIndexDirectoryNode* const & directory, directories ) {
-            qDebug() << directory->name();
+        QString path( parser.value( sub_folder ) );
+        const CIndexDirectoryNode* node( file.directory( path ) );
+        if( node == NULL )
+        {
+            std::cout << qPrintable(path) << ": Directory not found.\n";
+            return 1;
         }
+        print( *node );
     }
     catch ( std::exception& e )
     {

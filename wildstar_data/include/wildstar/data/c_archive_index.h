@@ -30,6 +30,7 @@ namespace wildstar
             virtual void open();
 
             const CIndexDirectoryNode& root() const;
+            const CIndexDirectoryNode* directory( const QString& path ) const;
 
         protected:
             virtual void clear();
@@ -42,6 +43,8 @@ namespace wildstar
             CPackage                package_;
             Header                  header_;
             CIndexDirectoryNode     root_;
+
+            static QString          SEPERATOR;
         };
 
         WILDSTAR_DATA_SHARED QDataStream& operator>>( QDataStream& stream, CArchiveIndex::Header& header );

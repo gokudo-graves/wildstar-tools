@@ -2,6 +2,7 @@
 
 #include <QBuffer>
 #include <QDataStream>
+#include <QDebug>
 
 #include "wildstar/data/exception.h"
 
@@ -62,13 +63,13 @@ namespace wildstar
             {
                 quint32 name_offset( 0 );
                 CIndexFileNode* node( new CIndexFileNode( this ) );
-                stream >> name_offset >> node;
                 files_.push_back( node );
-                entries.push_back( NameEntry( name_offset, node ));
+                stream >> name_offset >> node;
+                entries.push_back( NameEntry( name_offset, node ) );
             }
 
             size_t directory_data_size( DIRECTORY_ENTRY_SIZE * header.directory_count );
-            size_t file_data_size( DIRECTORY_ENTRY_SIZE * header.file_count );
+            size_t file_data_size( FILE_ENTRY_SIZE * header.file_count );
             size_t data_size( HEADER_SIZE + directory_data_size + file_data_size );
             size_t string_data_size( block.size() - data_size );
             QByteArray strings( block.right( string_data_size ) );
@@ -90,6 +91,19 @@ namespace wildstar
                 }
                 directory.second->load( directory.first, package );
             }
+        }
+
+        //----------------------------------------------------------------------
+        const CIndexDirectoryNode*
+        CIndexDirectoryNode::directory( const QString& name ) const
+        {
+            foreach ( const CIndexDirectoryNode* const &directory, directories_ ) {
+                if( !directory->name().compare( name ) )
+                {
+                    return directory;
+                }
+            }
+            return NULL;
         }
 
         //----------------------------------------------------------------------

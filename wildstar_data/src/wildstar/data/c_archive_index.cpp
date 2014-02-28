@@ -4,6 +4,9 @@
 
 #include <QBuffer>
 #include <QDataStream>
+#include <QStringList>
+
+#include <QDebug>
 
 #include "wildstar/data/exception.h"
 
@@ -11,6 +14,9 @@ namespace wildstar
 {
     namespace data
     {
+        //----------------------------------------------------------------------
+        QString CArchiveIndex::SEPERATOR("/");
+
         //----------------------------------------------------------------------
         CArchiveIndex::CArchiveIndex( const QString& file_name ) :
             package_( file_name )
@@ -73,6 +79,22 @@ namespace wildstar
         CArchiveIndex::root() const
         {
             return root_;
+        }
+
+        //----------------------------------------------------------------------
+        const CIndexDirectoryNode*
+        CArchiveIndex::directory( const QString& path ) const
+        {
+            const CIndexDirectoryNode* node( &root_ );
+            QStringList paths( path.split( SEPERATOR ) );
+            while( !paths.isEmpty() && node != NULL )
+            {
+                QString name( paths.front() );
+                node = node->directory( name );
+                paths.pop_front();
+            }
+
+            return node;
         }
         
         //----------------------------------------------------------------------
