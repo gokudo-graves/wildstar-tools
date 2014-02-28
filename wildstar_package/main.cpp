@@ -15,35 +15,12 @@ GNU General Public License for more details.
 -----------------------------------------------------------------------------
 */
 
-#include <iostream>
-
 #include <QDebug>
 
 #include <QCommandLineOption>
-#include <QCommandLineParser>
 #include <QCoreApplication>
 
-#include "wildstar/data/c_archive_index.h"
-#include "wildstar/data/c_package.h"
-
-using namespace wildstar;
-using namespace wildstar::data;
-
-void print( const CIndexDirectoryNode& node, const QString& path = "" )
-{
-    QString prefix( path + "/" );
-    foreach( const CIndexDirectoryNode* const & directory, node.directories() ) {
-        const QString& name( directory->name() );
-        std::cout << qPrintable( prefix ) << qPrintable( name ) << "\n";
-        print( *directory, prefix + name );
-    }
-
-    foreach( const CIndexFileNode* const & file, node.files() ) {
-        const QString& name( file->name() );
-        std::cout << qPrintable( prefix ) << qPrintable( name )
-                  << "\n";
-    }
-}
+#include "c_list_command.h"
 
 int main(int argc, char *argv[])
 {
@@ -55,38 +32,33 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
 
-    parser.addPositionalArgument("filename", app.translate("main", "application-parameter-filename"), "*.index");
-
-    QCommandLineOption sub_folder(QStringList() << "s" << "sub-folder", app.translate("main", "application-parameter-sub-folder"), "sub-folder");
-    parser.addOption(sub_folder);
-
-    parser.process( app );
+    parser.addPositionalArgument("command", app.translate("main", "application-parameter-command"), "list|build-version");
+    parser.parse( app.arguments() );
     const QStringList args( parser.positionalArguments() );
+    parser.clearPositionalArguments();
 
-    if( args.size() != 1 )
+    if( args.isEmpty() )
     {
         parser.showHelp( 1 );
     }
-    QString filename( args.at( 0 ) );
-    CArchiveIndex file( filename );
+
+    ICommand* command( NULL );
+    CListCommand list;
+    const QString command_name( args.at(0) );
+    if (command_name == "list") {
+        command = &list;
+    }
+    command->options( parser );
+    parser.process( app );
 
     try
     {
-        file.open();
-        QString path( parser.value( sub_folder ) );
-        const CIndexDirectoryNode* node( file.directory( path ) );
-        if( node == NULL )
-        {
-            std::cout << qPrintable(path) << ": Directory not found.\n";
-            return 1;
-        }
-        print( *node );
+        return command->execute( parser );
     }
     catch ( std::exception& e )
     {
         qDebug() << "Exception: " << e.what();
-        return 1;
     }
 
-    return 0;
+    return 1;
 }
