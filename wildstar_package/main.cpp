@@ -15,10 +15,9 @@ GNU General Public License for more details.
 -----------------------------------------------------------------------------
 */
 
-#include <QApplication>
 #include <QDebug>
 
-#include "MainWindow.h"
+#include "data/c_archive_index.h"
 #include "data/c_package.h"
 
 using namespace wildstar;
@@ -26,14 +25,12 @@ using namespace wildstar::data;
 
 int main(int argc, char *argv[])
 {
-//    QApplication a(argc, argv);
-//    MainWindow w;
-//    w.show();
+    //CPackage file("D:/game/WildStar/Patch/ClientData.index");
+    CArchiveIndex file("D:/game/WildStar/Patch/ClientData.index");
 
-    CPackage package("D:/game/WildStar/Patch/ClientData.index");
     try
     {
-        package.load();
+        file.open();
     }
     catch ( std::exception& e )
     {
@@ -41,6 +38,5 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    //    return a.exec();
     return 0;
 }

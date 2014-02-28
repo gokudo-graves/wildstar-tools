@@ -4,25 +4,27 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT       += core
 
 TARGET = wildstar_package
 TEMPLATE = app
 
 
 SOURCES += main.cpp\
-    MainWindow.cpp \
     c_index_model.cpp \
     a_node.cpp \
-    data/c_package.cpp
+    data/c_package.cpp \
+    data/c_archive_index.cpp \
+    data/c_index_directory_node.cpp \
+    data/c_index_file_node.cpp \
+    data/a_index_node.cpp
 
-HEADERS  += MainWindow.h \
+HEADERS  += \
     c_index_model.h \
     a_node.h \
     data/c_package.h \
     data/exception.h \
-    data/s_package_header.h
-
-FORMS    += MainWindow.ui
+    data/c_archive_index.h \
+    data/c_index_directory_node.h \
+    data/c_index_file_node.h \
+    data/a_index_node.h

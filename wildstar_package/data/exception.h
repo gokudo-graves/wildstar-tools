@@ -80,6 +80,18 @@ namespace wildstar
         };
 
         //----------------------------------------------------------------------
+        class EInvalidFileHeader : public EInvalidFile
+        {
+        public:
+            EInvalidFileHeader() {}
+            virtual ~EInvalidFileHeader() throw() {}
+
+            virtual const char* what() const throw() {
+                return "Invalid file header.";
+            }
+        };
+
+        //----------------------------------------------------------------------
     }
 }
 #endif // WILDSTAR_DATA_EXCEPTION_H
