@@ -107,18 +107,24 @@ if( package_header.magic != PACK )
 //    PackageBlock   package_blocks;
 //}
 
-FSeek( package_header.block_list_offset );
+FSeek( package_header.block_descriptions_offset );
 BlockListEntry  block_list[package_header.block_count]<optimize=true>;
 
-FSeek( block_list[1].offset );
+FSeek( block_list[package_header.type_block_index].offset );
+IndexHeader type;
+if( type.magic != AIDX )
+{
+    Warning( "File is not a valid wildstar index file. Template stopped." );
+    return -1;
+}
+
+FSeek( block_list[type.root_block].offset );
 IndexList   root;
 
+// only loop through 1 level of the directory tree
 local uint32 i;
-for( i = 3; i < package_header.block_count; ++i )
+for( i = 0; i < root.dir_count; ++i )
 {
-    if( block_list[i].size )
-    {
-        FSeek( block_list[i].offset );
-        IndexList   childs;
-    }
+    FSeek( block_list[root.dirs[i].block_index].offset );
+    IndexList   childs;
 }

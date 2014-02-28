@@ -1,0 +1,71 @@
+//--------------------------------------
+//--- 010 Editor v3.0.3 Binary Template
+//
+// File:
+// Author:
+// Revision:
+// Purpose:
+//--------------------------------------
+
+enum Magic {
+    PACK = 0x5041434B
+  , AARC = 0x41415243
+};
+
+struct PackageHeader
+{
+    uint32  magic;
+    uint32  version;
+    uint64  unkown_008[64];
+    uint64  file_size;
+    uint64  unkown_210;
+    uint64  block_descriptions_offset;
+    uint32  block_count;
+    uint32  unkown_224_block_index; // some block index
+    uint32  type_block_index;
+    uint32  unkown_22C;
+    uint32  unkown_230[2]; // unused
+};
+
+struct PackageBlock
+{
+    uint64  block_size;
+    local   int64 data_pos = FTell();
+    char    data[block_size];
+    uint64  block_size;
+};
+
+struct BlockListEntry
+{
+    uint64 offset;
+    uint64 size;
+};
+
+struct ArchiveHeader
+{
+    uint32 magic;
+    uint32 version;
+    uint32 unkown_8;
+    uint32 unkown_a;
+};
+
+
+LittleEndian();
+
+PackageHeader   package_header;
+if( package_header.magic != PACK )
+{
+    Warning( "File is not a valid wildstar package file. Template stopped." );
+    return -1;
+}
+
+FSeek( package_header.block_descriptions_offset );
+BlockListEntry  block_list[package_header.block_count]<optimize=true>;
+
+FSeek( block_list[package_header.type_block_index].offset );
+ArchiveHeader type;
+if( type.magic != AARC )
+{
+    Warning( "File is not a valid wildstar archive file. Template stopped." );
+    return -1;
+}

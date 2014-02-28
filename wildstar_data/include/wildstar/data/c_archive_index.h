@@ -20,7 +20,7 @@ namespace wildstar
             };
 
             enum {
-                MAGIC        = 0x41494458 // AIDX
+                MAGIC       = 0x41494458 // AIDX
               , VERSION     = 1
             };
 

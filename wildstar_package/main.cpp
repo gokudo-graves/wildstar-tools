@@ -20,6 +20,7 @@ GNU General Public License for more details.
 #include <QCommandLineOption>
 #include <QCoreApplication>
 
+#include "c_extract_command.h"
 #include "c_list_command.h"
 
 int main(int argc, char *argv[])
@@ -32,7 +33,7 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
 
-    parser.addPositionalArgument("command", app.translate("main", "application-parameter-command"), "list");
+    parser.addPositionalArgument("command", app.translate("main", "application-parameter-command"), "list|extract");
     parser.parse( app.arguments() );
     const QStringList args( parser.positionalArguments() );
     if( args.isEmpty() )
@@ -41,11 +42,15 @@ int main(int argc, char *argv[])
     }
 
     ICommand* command( NULL );
-    CListCommand list;
+    CExtractCommand     extract;
+    CListCommand        list;
     const QString command_name( args.at(0) );
-    if (command_name == "list") {
+    if (command_name == "extract") {
+        command = &extract;
+    } else if (command_name == "list") {
         command = &list;
     }
+
     if( command == NULL )
     {
         parser.showHelp( 1 );
