@@ -21,7 +21,6 @@ private:
     bool long_listing_;
     bool show_directories_;
 
-    static const QCommandLineOption     OPTION_SUB_FOLDER;
     static const QCommandLineOption     OPTION_LONG_LISTING;
     static const QCommandLineOption     OPTION_NO_DIRECTORIES;
 };

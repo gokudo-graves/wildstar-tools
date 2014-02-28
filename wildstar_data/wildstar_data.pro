@@ -24,7 +24,7 @@ SOURCES += \
     src/wildstar/data/c_index_directory_node.cpp \
     src/wildstar/data/c_index_file_node.cpp \
     src/wildstar/data/a_index_node.cpp \
-    include/wildstar/data/c_archive.cpp
+    src/wildstar/data/c_archive.cpp
 
 HEADERS  += \
     include/wildstar/data/global.h \

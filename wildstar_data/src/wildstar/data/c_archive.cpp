@@ -39,6 +39,13 @@ namespace wildstar
 
         //----------------------------------------------------------------------
         void
+        CArchive::extractBlock( quint32 block, QIODevice& destination )
+        {
+            destination.write( package_.readBlock( block ) );
+        }
+
+        //----------------------------------------------------------------------
+        void
         CArchive::clear()
         {
             std::memset( &header_, 0, sizeof( header_ ) );

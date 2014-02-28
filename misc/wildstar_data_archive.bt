@@ -46,7 +46,14 @@ struct ArchiveHeader
     uint32 magic;
     uint32 version;
     uint32 file_count;
-    uint32 unkown_a;
+    uint32 entry_list_block_index;
+};
+
+struct ArchiveEntry
+{
+    uint32 block_index;
+    char   hash[20];
+    uint64 size_;
 };
 
 
@@ -69,3 +76,6 @@ if( type.magic != AARC )
     Warning( "File is not a valid wildstar archive file. Template stopped." );
     return -1;
 }
+
+FSeek( block_list[type.entry_list_block_index].offset );
+ArchiveEntry entry_list[type.file_count]<optimize=true>;

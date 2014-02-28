@@ -1,7 +1,7 @@
 #ifndef C_EXTRACT_COMMAND_H
 #define C_EXTRACT_COMMAND_H
 
-#include <QCommandLineOption>
+//#include <QCommandLineOption>
 
 #include "i_command.h"
 
@@ -14,6 +14,7 @@ public:
     virtual int execute( QCommandLineParser& parser );
 
 private:
+    //static const QCommandLineOption     OPTION_;
 };
 
 #endif // C_EXTRACT_COMMAND_H

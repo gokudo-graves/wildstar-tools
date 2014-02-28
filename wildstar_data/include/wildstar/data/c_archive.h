@@ -27,6 +27,7 @@ namespace wildstar
             virtual ~CArchive();
 
             virtual void open();
+            virtual void extractBlock( quint32 block, QIODevice& destination );
 
         protected:
             virtual void clear();
