@@ -24,10 +24,10 @@ namespace wildstar
               , VERSION     = 1
             };
 
-            explicit CArchiveIndex( const QString& file_name );
+            explicit CArchiveIndex( const QString& file_name = QString() );
             virtual ~CArchiveIndex();
 
-            virtual void open();
+            virtual void open( const QString& file_name = QString() );
 
             const CIndexDirectoryNode& root() const;
             const CIndexDirectoryNode* directory( const QString& path ) const;

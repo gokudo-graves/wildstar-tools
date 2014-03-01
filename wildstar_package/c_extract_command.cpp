@@ -38,12 +38,12 @@ CExtractCommand::execute( QCommandLineParser& parser )
     {
         parser.showHelp( 1 );
     }
-    QString filename( args.at( 1 ) )
+    QString archive_file_path( args.at( 1 ) )
           , destination( args.back() )
           , source( args.size() > 2 ? args.at( 2 ) : "" )
           ;
 
-    archive_.open( filename );
+    archive_.open( archive_file_path );
 
     ExtractMode mode( UNKNOWN );
     bool is_source_int( false );
@@ -57,10 +57,12 @@ CExtractCommand::execute( QCommandLineParser& parser )
         mode = FILE;
     }
 
-    QFileInfo   file_info( filename );
-    QString     index_filename( file_info.path() + "/" + file_info.completeBaseName() + ".index" );
+    QFileInfo   file_info( archive_file_path );
+    QString     index_file_name( file_info.completeBaseName() + ".index" );
+    QString     index_file_path( file_info.dir().filePath( index_file_name );
     switch ( mode ) {
         case FILE:
+            index_.open( index_file_path );
             qDebug() << "\narchive : " << filename
                      << "\nindex   : " << index_filename
                      ;
@@ -80,7 +82,7 @@ CExtractCommand::execute( QCommandLineParser& parser )
 
 //------------------------------------------------------------------------------
 void
-CExtractCommand::extractBlock(const uint block, const QString& destination )
+CExtractCommand::extractBlock( const uint block, const QString& destination )
 {
     QString     out_file_path( destination );
     QFileInfo   out_info( destination );
@@ -94,6 +96,12 @@ CExtractCommand::extractBlock(const uint block, const QString& destination )
     out.open( QIODevice::WriteOnly );
     archive_.extractBlock( block, out );
     out.close();
+}
+
+//------------------------------------------------------------------------------
+void
+CExtractCommand::extractFile( const QString& file, const QString& destination )
+{
 }
 
 //------------------------------------------------------------------------------

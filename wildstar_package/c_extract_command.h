@@ -16,6 +16,7 @@ public:
 
 private:
     virtual void extractBlock( const uint block, const QString& destination );
+    virtual void extractFile( const QString& file, const QString& destination );
 
     enum ExtractMode {
         BLOCK
@@ -24,7 +25,8 @@ private:
       , UNKNOWN
     };
 
-    wildstar::data::CArchive archive_;
+    wildstar::data::CArchive        archive_;
+    wildstar::data::CArchiveIndex   index_;
 
     //static const QCommandLineOption     OPTION_;
 };

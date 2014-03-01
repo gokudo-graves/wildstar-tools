@@ -32,10 +32,10 @@ namespace wildstar
 
         //----------------------------------------------------------------------
         void
-        CArchiveIndex::open()
+        CArchiveIndex::open( const QString& file_name )
         {
             clear();
-            package_.open();
+            package_.open( file_name );
 
             loadHeader();
             checkHeader();
