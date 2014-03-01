@@ -12,10 +12,17 @@ namespace wildstar
         public:
             struct Header
             {
-                quint32  magic;
-                quint32  version;
-                quint32  unkown_8;
-                quint32  unkown_a;
+                quint32     magic;
+                quint32     version;
+                quint32     file_count;
+                quint32     file_descriptions_block_index;
+            };
+
+            struct File
+            {
+                quint32     block_index;
+                CHash       hash;
+                quint64     size;
             };
 
             enum {

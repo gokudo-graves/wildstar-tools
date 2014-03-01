@@ -80,7 +80,7 @@ namespace wildstar
         operator>>( QDataStream& stream, CArchive::Header& header )
         {
             stream >> header.magic >> header.version
-                   >> header.unkown_8 >> header.unkown_a
+                   >> header.file_count >> header.file_descriptions_block_index
                    ;
 
             return stream;

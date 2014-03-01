@@ -24,12 +24,8 @@ namespace wildstar
         CIndexFileNode::read( QDataStream& stream )
         {
             stream >> unknown_04_
-                   >> file_time_ >> size_ >> compressed_size_;
-
-            hash_.clear();
-            hash_.resize( HASH_LENGTH );
-            stream.readRawData( hash_.data(), HASH_LENGTH );
-            stream >> unknown_34_;
+                   >> file_time_ >> size_ >> compressed_size_ >> hash_
+                   >> unknown_34_;
         }
 
         //----------------------------------------------------------------------
@@ -47,7 +43,7 @@ namespace wildstar
         }
 
         //----------------------------------------------------------------------
-        const QByteArray&
+        const CHash&
         CIndexFileNode::hash() const
         {
             return hash_;

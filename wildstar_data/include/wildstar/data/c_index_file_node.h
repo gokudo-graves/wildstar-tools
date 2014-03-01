@@ -4,6 +4,7 @@
 #include <QByteArray>
 
 #include "a_index_node.h"
+#include "c_hash.h"
 
 namespace wildstar
 {
@@ -14,9 +15,6 @@ namespace wildstar
         class WILDSTAR_DATA_SHARED CIndexFileNode : public AIndexNode
         {
         public:
-            enum {
-                HASH_LENGTH = 20
-            };
 
             explicit CIndexFileNode( CIndexDirectoryNode* parent );
             virtual ~CIndexFileNode();
@@ -26,14 +24,14 @@ namespace wildstar
             virtual quint64 size() const;
             virtual quint64 compressedSize() const;
 
-            virtual const QByteArray& hash() const;
+            virtual const CHash& hash() const;
 
         private:
             quint32     unknown_04_;
             quint64     file_time_;
             quint64     size_;
             quint64     compressed_size_;
-            QByteArray  hash_; // sha-1
+            CHash       hash_;
             quint32     unknown_34_; // mabye padding to put sha-1 in 3 uint64
         };
 
