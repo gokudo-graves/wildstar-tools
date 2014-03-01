@@ -18,8 +18,13 @@ namespace wildstar
 
         //----------------------------------------------------------------------
         void
-        CPackage::open()
+        CPackage::open( const QString& file_name )
         {
+            if( !file_name.isNull() )
+            {
+                file_.close();
+                file_.setFileName( file_name );
+            }
             clear();
             checkFile();
 

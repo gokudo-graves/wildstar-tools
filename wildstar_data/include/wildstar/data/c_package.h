@@ -44,10 +44,10 @@ namespace wildstar
               , MINIMUM_BLOCK_OFFSET    = MINIMUM_FILE_SIZE
             };
 
-            explicit CPackage( const QString& file_name );
+            explicit CPackage( const QString& file_name = QString() );
             virtual ~CPackage() {}
 
-            virtual void open();
+            virtual void open( const QString& file_name = QString() );
 
             virtual quint32 getBlockCount() const;
 

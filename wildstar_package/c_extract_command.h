@@ -3,6 +3,7 @@
 
 //#include <QCommandLineOption>
 
+#include "wildstar/data/c_archive.h"
 #include "i_command.h"
 
 class CExtractCommand : public ICommand
@@ -14,6 +15,17 @@ public:
     virtual int execute( QCommandLineParser& parser );
 
 private:
+    virtual void extractBlock( const uint block, const QString& destination );
+
+    enum ExtractMode {
+        BLOCK
+      , FILE
+      , FOLDER
+      , UNKNOWN
+    };
+
+    wildstar::data::CArchive archive_;
+
     //static const QCommandLineOption     OPTION_;
 };
 

@@ -3,11 +3,15 @@
 #include <iostream>
 #include <iomanip>
 
+#include <QDir>
+
 #include <QDebug>
 
 #include "wildstar/data/c_archive.h"
+#include "wildstar/data/c_archive_index.h"
 
 using wildstar::data::CArchive;
+using wildstar::data::CArchiveIndex;
 
 //------------------------------------------------------------------------------
 CExtractCommand::CExtractCommand()
@@ -36,34 +40,60 @@ CExtractCommand::execute( QCommandLineParser& parser )
     }
     QString filename( args.at( 1 ) )
           , destination( args.back() )
-          , source( "" )
+          , source( args.size() > 2 ? args.at( 2 ) : "" )
           ;
 
-    if( args.size() == 4 )
+    archive_.open( filename );
+
+    ExtractMode mode( UNKNOWN );
+    bool is_source_int( false );
+    uint block_index( source.toUInt( &is_source_int ) );
+    if( is_source_int )
     {
-        source = args.at( 2 );
+        mode = BLOCK;
+    }
+    else
+    {
+        mode = FILE;
     }
 
-    CArchive file( filename );
-    file.open();
+    QFileInfo   file_info( filename );
+    QString     index_filename( file_info.path() + "/" + file_info.completeBaseName() + ".index" );
+    switch ( mode ) {
+        case FILE:
+            qDebug() << "\narchive : " << filename
+                     << "\nindex   : " << index_filename
+                     ;
+            break;
 
-    bool extract_block( false );
-    uint block_index( source.toUInt( &extract_block ) );
-    qDebug() << "src: " << source
-             << "dst: " << destination
-             << "block_index: " << block_index
-             << "extract_block: " << extract_block
-             ;
+        case BLOCK:
+            extractBlock( block_index, destination );
+            break;
 
-    if( extract_block )
-    {
-        QFile out( destination );
-        out.open( QIODevice::WriteOnly ); // | QIODevice::Truncate
-        file.extractBlock( block_index, out );
-        out.close();
+        case UNKNOWN:
+        default:
+            parser.showHelp( 1 );
     }
 
     return 0;
+}
+
+//------------------------------------------------------------------------------
+void
+CExtractCommand::extractBlock(const uint block, const QString& destination )
+{
+    QString     out_file_path( destination );
+    QFileInfo   out_info( destination );
+    if( out_info.fileName().isEmpty() )
+    {
+        QDir::current().mkpath( out_info.path() );
+        QString file_name( QString( "block.%1.bin").arg( block ) );
+        out_file_path = out_info.dir().filePath( file_name );
+    }
+    QFile out( out_file_path );
+    out.open( QIODevice::WriteOnly );
+    archive_.extractBlock( block, out );
+    out.close();
 }
 
 //------------------------------------------------------------------------------

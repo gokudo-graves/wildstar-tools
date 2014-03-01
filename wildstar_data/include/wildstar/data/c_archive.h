@@ -30,10 +30,10 @@ namespace wildstar
               , VERSION     = 2
             };
 
-            explicit CArchive( const QString& file_name );
+            explicit CArchive( const QString& file_name = QString() );
             virtual ~CArchive();
 
-            virtual void open();
+            virtual void open( const QString& file_name = QString() );
             virtual void extractBlock( quint32 block, QIODevice& destination );
 
         protected:
