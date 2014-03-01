@@ -24,6 +24,8 @@ namespace wildstar
               , VERSION     = 1
             };
 
+            typedef QList<const CIndexFileNode*>    ConstFileList;
+
             explicit CArchiveIndex( const QString& file_name = QString() );
             virtual ~CArchiveIndex();
 

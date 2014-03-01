@@ -13,6 +13,7 @@ CONFIG( debug, debug|release ) {
 }
 
 TEMPLATE = lib
+#VERSION = 0.0.1
 
 INCLUDEPATH += include
 

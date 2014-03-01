@@ -2,6 +2,7 @@
 
 #include <cstring>
 
+#include <QByteArray>
 #include <QBuffer>
 #include <QDataStream>
 #include <QStringList>
@@ -47,17 +48,27 @@ namespace wildstar
         }
 
         //----------------------------------------------------------------------
+        void
+        CArchive::extractFile( const CHash& hash, QIODevice& destination )
+        {
+            if( !files_.contains( hash ) )
+            {
+                // throw EFileNotFound
+            }
+
+            const File& file( files_.value( hash ) );
+            QByteArray  data;
+            QDataStream stream( &data, QIODevice::WriteOnly );
+            stream << (quint32)file.size;
+            data.append( package_.readBlock( file.block_index ) );
+            destination.write( qUncompress( data ) );
+        }
+
+        //----------------------------------------------------------------------
         bool
         CArchive::contains( const CHash& hash ) const
         {
             return files_.contains( hash );
-        }
-
-        //----------------------------------------------------------------------
-        const CArchive::File&
-        CArchive::file( const CHash& hash ) const
-        {
-            return files_.value( hash );
         }
 
         //----------------------------------------------------------------------

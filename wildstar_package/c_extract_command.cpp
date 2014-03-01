@@ -12,7 +12,11 @@
 
 using wildstar::data::CArchive;
 using wildstar::data::CArchiveIndex;
+using wildstar::data::CIndexDirectoryNode;
 using wildstar::data::CIndexFileNode;
+
+//------------------------------------------------------------------------------
+const QCommandLineOption    CExtractCommand::OPTION_FULL_PATH(QStringList() << "f" << "full-path", "application-parameter-full-path");
 
 //------------------------------------------------------------------------------
 CExtractCommand::CExtractCommand()
@@ -25,8 +29,10 @@ CExtractCommand::options( QCommandLineParser& parser ) const
 {
     parser.addPositionalArgument("extract", "application-parameter-command-list", "extract");
     parser.addPositionalArgument("archive-file", "application-parameter-archive-file", "*.archive");
-    parser.addPositionalArgument("source", "application-parameter-source", "[0..n|filepath]");
+    parser.addPositionalArgument("source", "application-parameter-source", "[filepath]");
     parser.addPositionalArgument("destination", "application-parameter-destination");
+
+    parser.addOption( OPTION_FULL_PATH );
 }
 
 //------------------------------------------------------------------------------
@@ -40,92 +46,85 @@ CExtractCommand::execute( QCommandLineParser& parser )
         parser.showHelp( 1 );
     }
     QString archive_file_path( args.at( 1 ) )
-          , destination( args.back() )
+          , destination( args.size() == 4 ? args.at( 3 ) : "" )
           , source( args.size() > 2 ? args.at( 2 ) : "" )
           ;
 
     archive_.open( archive_file_path );
 
-    ExtractMode mode( UNKNOWN );
-    bool is_source_int( false );
-    uint block_index( source.toUInt( &is_source_int ) );
-    if( is_source_int )
-    {
-        mode = BLOCK;
-    }
-    else
-    {
-        mode = FILE;
-        QFileInfo   source_info( source );
-        if( source_info.fileName().isEmpty() )
-        {
-            mode = DIRECTORY;
-        }
-    }
-
     QFileInfo   file_info( archive_file_path );
     QString     index_file_name( file_info.completeBaseName() + ".index" );
     QString     index_file_path( file_info.dir().filePath( index_file_name ) );
-    const CIndexFileNode* file_node( NULL );
+    index_.open( index_file_path );
 
-    switch ( mode ) {
-        case FILE:
-            qDebug() << "\narchive : " << archive_file_path
-                     << "\nindex   : " << index_file_path
-                     << "\nsrc     : " << source
-                     << "\ndst     : " << destination
-                     ;
-            index_.open( index_file_path );
-            file_node = index_.file( source );
-            if( file_node == NULL )
-            {
-                std::cout << qPrintable(source) << ": File not found in index.\n";
-                return 1;
-            }
-            if( !archive_.contains( file_node->hash() ) )
-            {
-                std::cout << qPrintable(file_node->hash().toHex() ) << ": File hash not found in archive.\n";
-                return 1;
-            }
-            extractFile( file_node, destination );
-            break;
+    if( parser.isSet( OPTION_FULL_PATH ) )
+    {
+        QFileInfo   source_info( source );
+        QDir        out_path( destination );
+        destination = out_path.filePath( source_info.path() );
+    }
 
-        case BLOCK:
-            extractBlock( block_index, destination );
-            break;
+    const CIndexDirectoryNode* directory( index_.directory( source ) );
+    if( directory == NULL )
+    {
+        return extractFile( index_.file( source ), destination );
+    }
+    else
+    {
+        return extractDirectory( directory, destination );
+    }
+}
 
-        case UNKNOWN:
-        default:
-            parser.showHelp( 1 );
+//------------------------------------------------------------------------------
+int
+CExtractCommand::extractDirectory( const wildstar::data::CIndexDirectoryNode* node, QString destination )
+{
+    if( node == NULL )
+    {
+        qWarning() << "Directory not found in index.\n";
+        return 1;
+    }
+
+    QDir out_path( destination );
+    destination = out_path.filePath( node->name() );
+
+    foreach( const CIndexFileNode* const & file, node->files() )
+    {
+        extractFile( file, destination );
+    }
+
+    foreach( const CIndexDirectoryNode* const & directory, node->directories() )
+    {
+        extractDirectory( directory, destination );
     }
 
     return 0;
 }
 
 //------------------------------------------------------------------------------
-void
-CExtractCommand::extractBlock( const uint block, const QString& destination, QString file_name )
+int
+CExtractCommand::extractFile(const wildstar::data::CIndexFileNode* node, const QString& destination )
 {
-    if( file_name.isEmpty() )
+    if( node == NULL )
     {
-        file_name = QString( "block.%1.bin").arg( block );
+        qWarning() << "File not found in index.\n";
+        return 1;
     }
-
+    if( !archive_.contains( node->hash() ) )
+    {
+        qWarning() << qPrintable( node->hash().toHex() ) << ": File hash not found in archive.\n";
+        return 1;
+    }
     QDir::current().mkpath( destination );
     QDir        out_path( destination );
-    QString     out_file_path( out_path.filePath( file_name ) );
+    QString     out_file_path( out_path.filePath( node->name() ) );
     QFile       out( out_file_path );
+    std::cout << "extracting: " << qPrintable( out_file_path ) << "\n";
     out.open( QIODevice::WriteOnly );
-    archive_.writeBlock( block, out );
+    archive_.extractFile( node->hash(), out );
     out.close();
-}
 
-//------------------------------------------------------------------------------
-void
-CExtractCommand::extractFile( const wildstar::data::CIndexFileNode* file_node, const QString& destination )
-{
-    const CArchive::File& file( archive_.file( file_node->hash() )  );
-    extractBlock( file.block_index, destination, file_node->name() );
+    return 0;
 }
 
 //------------------------------------------------------------------------------
