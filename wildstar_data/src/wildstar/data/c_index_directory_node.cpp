@@ -95,12 +95,25 @@ namespace wildstar
 
         //----------------------------------------------------------------------
         const CIndexDirectoryNode*
-        CIndexDirectoryNode::directory( const QString& name ) const
+        CIndexDirectoryNode::directory( const QString& name, const Qt::CaseSensitivity case_sensitivity ) const
         {
             foreach ( const CIndexDirectoryNode* const &directory, directories_ ) {
-                if( !directory->name().compare( name ) )
+                if( !directory->name().compare( name, case_sensitivity ) )
                 {
                     return directory;
+                }
+            }
+            return NULL;
+        }
+
+        //----------------------------------------------------------------------
+        const CIndexFileNode*
+        CIndexDirectoryNode::file( const QString& name, const Qt::CaseSensitivity case_sensitivity ) const
+        {
+            foreach ( const CIndexFileNode* const &file, files_ ) {
+                if( !file->name().compare( name, case_sensitivity ) )
+                {
+                    return file;
                 }
             }
             return NULL;

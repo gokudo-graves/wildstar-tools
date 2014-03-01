@@ -21,8 +21,12 @@ namespace wildstar
             virtual ~CHash();
 
             virtual void clear();
+
             virtual char* data();
+
             virtual QByteArray toHex() const;
+
+            virtual bool operator<( const CHash& other ) const;
 
         protected:
 

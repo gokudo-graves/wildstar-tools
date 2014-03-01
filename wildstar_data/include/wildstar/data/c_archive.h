@@ -1,12 +1,28 @@
 #ifndef WILDSTAR_DATA_C_ARCHIVE_H
 #define WILDSTAR_DATA_C_ARCHIVE_H
 
+#include <QMap>
+
 #include "c_archive_index.h"
+#include "exception.h"
 
 namespace wildstar
 {
     namespace data
     {
+        //----------------------------------------------------------------------
+        class WILDSTAR_DATA_SHARED EDuplicatedHash : public EInvalidFile
+        {
+        public:
+            EDuplicatedHash() {}
+            virtual ~EDuplicatedHash() throw() {}
+
+            virtual const char* what() const throw() {
+                return "Invalid file. Duplicate HashEntry";
+            }
+        };
+
+        //----------------------------------------------------------------------
         class WILDSTAR_DATA_SHARED CArchive
         {
         public:
@@ -30,26 +46,33 @@ namespace wildstar
               , VERSION     = 2
             };
 
+            typedef QMap<CHash, File>     FileMap;
+
             explicit CArchive( const QString& file_name = QString() );
             virtual ~CArchive();
 
             virtual void open( const QString& file_name = QString() );
-            virtual void extractBlock( quint32 block, QIODevice& destination );
+            virtual void writeBlock( quint32 block, QIODevice& destination );
+
+            virtual bool contains( const CHash& hash ) const;
+            virtual const File& file( const CHash& hash ) const;
 
         protected:
             virtual void clear();
 
             virtual void loadHeader();
+            virtual void loadFiles();
 
             virtual void checkHeader() const;
 
         private:
             CPackage    package_;
             Header      header_;
-
+            FileMap     files_;
         };
 
         WILDSTAR_DATA_SHARED QDataStream& operator>>( QDataStream& stream, CArchive::Header& header );
+        WILDSTAR_DATA_SHARED QDataStream& operator>>( QDataStream& stream, CArchive::File& file );
     }
 }
 

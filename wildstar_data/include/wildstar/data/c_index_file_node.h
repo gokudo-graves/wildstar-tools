@@ -28,7 +28,7 @@ namespace wildstar
 
         private:
             quint32     unknown_04_;
-            quint64     file_time_;
+            quint64     file_time_; // FILETIME
             quint64     size_;
             quint64     compressed_size_;
             CHash       hash_;

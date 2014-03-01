@@ -35,10 +35,21 @@ namespace wildstar
             virtual ~CIndexDirectoryNode();
 
             virtual void clear();
+
             virtual void load( quint32 block_index, CPackage& package );
-            const CIndexDirectoryNode* directory( const QString& name ) const;
+
+            virtual const CIndexDirectoryNode* directory(
+                const QString& name
+              , const Qt::CaseSensitivity case_sensitivity = Qt::CaseInsensitive
+            ) const;
+
+            virtual const CIndexFileNode* file(
+                const QString& name
+              , const Qt::CaseSensitivity case_sensitivity = Qt::CaseInsensitive
+            ) const;
 
             virtual const DirectoryList& directories() const;
+
             virtual const FileList& files() const;
 
         protected:

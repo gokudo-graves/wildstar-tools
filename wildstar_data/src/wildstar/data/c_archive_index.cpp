@@ -4,6 +4,7 @@
 
 #include <QBuffer>
 #include <QDataStream>
+#include <QFileInfo>
 #include <QStringList>
 
 #include <QDebug>
@@ -95,6 +96,21 @@ namespace wildstar
             }
 
             return node;
+        }
+
+        //----------------------------------------------------------------------
+        const CIndexFileNode*
+        CArchiveIndex::file( const QString& path ) const
+        {
+            QFileInfo path_info( path );
+            const CIndexDirectoryNode* directory_node( directory( path_info.path() ) );
+
+            if( directory_node != NULL )
+            {
+                return directory_node->file( path_info.fileName() );
+            }
+
+            return NULL;
         }
         
         //----------------------------------------------------------------------

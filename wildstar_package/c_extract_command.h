@@ -15,13 +15,13 @@ public:
     virtual int execute( QCommandLineParser& parser );
 
 private:
-    virtual void extractBlock( const uint block, const QString& destination );
-    virtual void extractFile( const QString& file, const QString& destination );
+    virtual void extractBlock( const uint block, const QString& destination, QString file_name = QString() );
+    virtual void extractFile( const wildstar::data::CIndexFileNode* file_node, const QString& destination );
 
     enum ExtractMode {
         BLOCK
       , FILE
-      , FOLDER
+      , DIRECTORY
       , UNKNOWN
     };
 

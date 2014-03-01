@@ -26,7 +26,7 @@ CListCommand::options( QCommandLineParser& parser ) const
 {
     parser.addPositionalArgument("list", "application-parameter-command-list", "list");
     parser.addPositionalArgument("index-file", "application-parameter-index-file", "*.index");
-    parser.addPositionalArgument("sub-folder", "application-parameter-sub-folder", "sub/folder");
+    parser.addPositionalArgument("directory", "application-parameter-directory", "path/to/directory");
 
     parser.addOption( OPTION_LONG_LISTING );
     parser.addOption( OPTION_NO_DIRECTORIES );
@@ -50,6 +50,7 @@ CListCommand::execute( QCommandLineParser& parser )
     const CIndexDirectoryNode* node( file.directory( path ) );
     if( node == NULL )
     {
+        // TODO: maybe use qWarning or qFaltal?? or std:cerr?
         std::cout << qPrintable(path) << ": Directory not found.\n";
         return 1;
     }

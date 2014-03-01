@@ -39,6 +39,13 @@ namespace wildstar
         }
 
         //----------------------------------------------------------------------
+        bool
+        CHash::operator<(const CHash& other) const
+        {
+            return data_ < other.data_;
+        }
+
+        //----------------------------------------------------------------------
         QDataStream&
         operator>>( QDataStream& stream, CHash& hash )
         {
