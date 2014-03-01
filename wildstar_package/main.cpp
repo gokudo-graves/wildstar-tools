@@ -29,11 +29,11 @@ int main(int argc, char *argv[])
     app.setApplicationVersion( "0.0.1" );
 
     QCommandLineParser parser;
-    parser.setApplicationDescription( app.translate("main", "application-description") );
+    parser.setApplicationDescription( app.translate("main", "tool to do some basic actions on wildstar data files") );
     parser.addHelpOption();
     parser.addVersionOption();
 
-    parser.addPositionalArgument("command", app.translate("main", "application-parameter-command"), "list|extract");
+    parser.addPositionalArgument("command", app.translate("main", "the command to execute, use <command> --help for detailed information"), "list|extract");
     parser.parse( app.arguments() );
     const QStringList args( parser.positionalArguments() );
     if( args.isEmpty() )

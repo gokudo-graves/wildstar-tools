@@ -16,7 +16,7 @@ using wildstar::data::CIndexDirectoryNode;
 using wildstar::data::CIndexFileNode;
 
 //------------------------------------------------------------------------------
-const QCommandLineOption    CExtractCommand::OPTION_FULL_PATH(QStringList() << "f" << "full-path", "application-parameter-full-path");
+const QCommandLineOption    CExtractCommand::OPTION_FULL_PATH(QStringList() << "f" << "full-path", "create the full source path at the destination");
 
 //------------------------------------------------------------------------------
 CExtractCommand::CExtractCommand()
@@ -27,10 +27,10 @@ CExtractCommand::CExtractCommand()
 void
 CExtractCommand::options( QCommandLineParser& parser ) const
 {
-    parser.addPositionalArgument("extract", "application-parameter-command-list", "extract");
-    parser.addPositionalArgument("archive-file", "application-parameter-archive-file", "*.archive");
-    parser.addPositionalArgument("source", "application-parameter-source", "[filepath]");
-    parser.addPositionalArgument("destination", "application-parameter-destination");
+    parser.addPositionalArgument("extract", "extract a directory or a single file", "extract");
+    parser.addPositionalArgument("archive-file", "the archive file", "*.archive");
+    parser.addPositionalArgument("source", "the directory or file to extract", "[directory|file]");
+    parser.addPositionalArgument("destination", "the path to extract to, defaults to the current folder", "[destination]");
 
     parser.addOption( OPTION_FULL_PATH );
 }

@@ -10,8 +10,8 @@ using wildstar::data::CIndexDirectoryNode;
 using wildstar::data::CIndexFileNode;
 
 //------------------------------------------------------------------------------
-const QCommandLineOption    CListCommand::OPTION_LONG_LISTING(QStringList() << "l" << "long-listing", "application-parameter-long-listing");
-const QCommandLineOption    CListCommand::OPTION_NO_DIRECTORIES(QStringList() << "d" << "no-directories", "application-parameter-no-directories");
+const QCommandLineOption    CListCommand::OPTION_LONG_LISTING(QStringList() << "l" << "long-listing", "show a more detailed listing");
+const QCommandLineOption    CListCommand::OPTION_NO_DIRECTORIES(QStringList() << "d" << "no-directories", "don't include directories in output");
 
 //------------------------------------------------------------------------------
 CListCommand::CListCommand() :
@@ -24,9 +24,9 @@ CListCommand::CListCommand() :
 void
 CListCommand::options( QCommandLineParser& parser ) const
 {
-    parser.addPositionalArgument("list", "application-parameter-command-list", "list");
-    parser.addPositionalArgument("index-file", "application-parameter-index-file", "*.index");
-    parser.addPositionalArgument("directory", "application-parameter-directory", "path/to/directory");
+    parser.addPositionalArgument("list", "list files and directories in an index file", "list");
+    parser.addPositionalArgument("index-file", "the archive index file", "*.index");
+    parser.addPositionalArgument("directory", "optional directory to output", "[directory]");
 
     parser.addOption( OPTION_LONG_LISTING );
     parser.addOption( OPTION_NO_DIRECTORIES );
