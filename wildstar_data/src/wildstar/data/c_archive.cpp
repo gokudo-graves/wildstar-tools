@@ -57,11 +57,16 @@ namespace wildstar
             }
 
             const File& file( files_.value( hash ) );
-            QByteArray  data;
-            QDataStream stream( &data, QIODevice::WriteOnly );
-            stream << (quint32)file.size;
-            data.append( package_.readBlock( file.block_index ) );
-            destination.write( qUncompress( data ) );
+            QByteArray data_out( package_.readBlock( file.block_index ) );
+            if( data_out.size() < file.size )
+            {
+                QByteArray data;
+                QDataStream stream( &data, QIODevice::WriteOnly );
+                stream << (quint32)file.size;
+                data.append( data_out );
+                data_out = qUncompress( data );
+            }
+            destination.write( data_out );
         }
 
         //----------------------------------------------------------------------
