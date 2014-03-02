@@ -1,0 +1,65 @@
+//--------------------------------------
+//--- 010 Editor v3.0.3 Binary Template
+//
+// File:
+// Author:
+// Revision:
+// Purpose:
+//--------------------------------------
+
+LittleEndian();
+
+enum Magic {
+    area = 0x61726561
+  , AREA = 0x41524541
+  , CHNK = 0x43484E4B
+};
+
+struct AreaHeader
+{
+    uint32  magic;
+    uint32  version;
+};
+
+struct ChunkHeader
+{
+    uint32  magic;
+    uint32  size;
+};
+
+struct ChunkEntry
+{
+    uint16  size;
+    uint16  unknown_2;
+    char    data[size]<optimize=false>;
+};
+
+struct PropEntry
+{
+    uint32  magic;
+    uint32  size;
+    char    data[size]<optimize=false>;
+};
+
+AreaHeader area_header;
+// TODO make case insensitive check
+if( area_header.magic != area && area_header.magic != AREA )
+{
+    Warning( "File is not a valid wildstar area file. Template stopped." );
+    return -1;
+}
+
+ChunkHeader chunk_header;
+if( chunk_header.magic != CHNK )
+{
+    Warning( "File is not a valid wildstar area file. Template stopped." );
+    return -1;
+}
+
+local int64 chunk_end = FTell() + chunk_header.size;
+while( FTell() < chunk_end )
+{
+    ChunkEntry chunk_entry;
+}
+
+PropEntry props;
