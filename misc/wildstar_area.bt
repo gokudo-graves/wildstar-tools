@@ -27,14 +27,78 @@ struct ChunkHeader
     uint32  size;
 };
 
+enum ChunkFlags
+{
+                    //0x384101C7
+    LAYER_0         = 0x00000000
+  , LAYER_1         = 0x00000008
+  , LAYER_2         = 0x00000100
+  , LAYER_3         = 0x00010000
+  , PROPERTY_65BF   = 0x00400000
+  , LAYER_4         = 0x08000000
+  , PROPERTY_75CF   = 0x10000000
+  , LAYER_5         = 0x20000000
+};
+
 struct ChunkEntry
 {
+    SetBackColor( cLtGreen );
     uint16  size;
     uint16  unknown_2;
+    SetBackColor( cNone );
+    local int64 pos = FTell();
+
+uint32 flags;
+uint16 unknown_8[361]; // seems to be some 19*19 grid
+
+uint32 unknown_2DA[4];
+
+uint16 unknown_2EA[65*65];
+
+if( flags & LAYER_1 )
+{
+    uint16 height_map[65*65];
+}
+
+uint16 unknown_44EE[40];
+
+if( flags & LAYER_1 )
+{
+    char shadow_map[65*65];
+}
+
+if( flags & LAYER_3 )
+{
+    char unknown_55BF[64*64];
+}
+
+if( flags & PROPERTY_65BF )
+{
+    uint32 unknown_65BF[4];
+}
+
+if( flags & LAYER_4 )
+{
+    char unknown_65CF[64*64]; // maybe colisions
+}
+
+if( flags & PROPERTY_75CF )
+{
+    uint32 unknown_75CF[4];
+}
+
+if( flags & LAYER_5 )
+{
+    uint16 unknown_75DF[65*65];
+}
+
+    FSeek(pos);
+    // contains multiple blocks
+    // 1 block 65x65 bytes seems to be some kind of shadow map or similar
     char    data[size]<optimize=false>;
 };
 
-struct PropEntry
+struct PropDescriptions
 {
     uint32  magic;
     uint32  size;
@@ -49,17 +113,21 @@ if( area_header.magic != area && area_header.magic != AREA )
     return -1;
 }
 
-ChunkHeader chunk_header;
-if( chunk_header.magic != CHNK )
+struct Chunks
 {
-    Warning( "File is not a valid wildstar area file. Template stopped." );
-    return -1;
-}
+    ChunkHeader chunk_header;
+    if( chunk_header.magic != CHNK )
+    {
+        Warning( "File is not a valid wildstar area file. Template stopped." );
+        return -1;
+    }
+    
+    local int64 chunk_end = FTell() + chunk_header.size;
+    while( FTell() < chunk_end )
+    {
+        ChunkEntry chunk_entry;
+    }
+} chunks;
 
-local int64 chunk_end = FTell() + chunk_header.size;
-while( FTell() < chunk_end )
-{
-    ChunkEntry chunk_entry;
-}
-
-PropEntry props;
+// only if props where defined in chnk !?
+//PropDescriptions prop_descriptions;
