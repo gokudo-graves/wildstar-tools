@@ -26,7 +26,10 @@ SOURCES += \
     src/wildstar/data/c_index_file_node.cpp \
     src/wildstar/data/a_index_node.cpp \
     src/wildstar/data/c_archive.cpp \
-    src/wildstar/data/c_hash.cpp
+    src/wildstar/data/c_hash.cpp \
+    src/wildstar/data/area/c_area.cpp \
+    src/wildstar/data/area/c_chunk.cpp \
+    src/wildstar/data/i_streamable.cpp
 
 HEADERS  += \
     include/wildstar/data/global.h \
@@ -38,7 +41,10 @@ HEADERS  += \
     include/wildstar/data/c_index_file_node.h \
     include/wildstar/data/a_index_node.h \
     include/wildstar/data/c_archive.h \
-    include/wildstar/data/c_hash.h
+    include/wildstar/data/c_hash.h \
+    include/wildstar/data/area/c_area.h \
+    include/wildstar/data/area/c_chunk.h \
+    include/wildstar/data/i_streamable.h
 
 unix {
     target.path = /usr/lib
