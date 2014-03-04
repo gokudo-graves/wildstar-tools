@@ -50,7 +50,7 @@ enum ChunkFlags
 struct ChunkEntry
 {
     SetBackColor( cLtGreen );
-    uint32  size;
+    uint32  size; // only 3 bytes used? 4th  byte is something else!?
     //uint16  unknown_2;
     SetBackColor( cNone );
     local int64 pos = FTell();
