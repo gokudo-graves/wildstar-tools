@@ -29,40 +29,69 @@ struct ChunkHeader
 
 enum ChunkFlags
 {
-                    //0x384101C7
-    LAYER_0         = 0x00000000
-  , LAYER_1         = 0x00000008
-  , LAYER_2         = 0x00000100
-  , LAYER_3         = 0x00010000
-  , PROPERTY_65BF   = 0x00400000
-  , LAYER_4         = 0x08000000
-  , PROPERTY_75CF   = 0x10000000
-  , LAYER_5         = 0x20000000
+                        //0x384101C7
+    PROPERTY_8          = 0x00000001
+  , PROPERTY_2DA        = 0x00000002
+  , LAYER_0             = 0x00000004
+  , LAYER_1             = 0x00000008
+  , UNKNOWN_0x00000040  = 0x00000040
+  , UNKNOWN_0x00000080  = 0x00000080
+  , LAYER_2             = 0x00000100
+  , LAYER_3             = 0x00010000
+  , PROPERTY_65BE       = 0x00200000
+  , PROPERTY_65BF       = 0x00400000
+  , LAYER_0x04000000    = 0x04000000
+  , LAYER_4             = 0x08000000
+  , PROPERTY_75CF       = 0x10000000
+  , LAYER_5             = 0x20000000
+  , UNKNOWN_FLAGS       = 0xC39EFE00
 };
 
 struct ChunkEntry
 {
     SetBackColor( cLtGreen );
-    uint16  size;
-    uint16  unknown_2;
+    uint32  size;
+    //uint16  unknown_2;
     SetBackColor( cNone );
     local int64 pos = FTell();
 
+SetBackColor( cLtRed );
 uint32 flags;
-uint16 unknown_8[361]; // seems to be some 19*19 grid
+SetBackColor( cNone );
 
-uint32 unknown_2DA[4];
+if(     flags & UNKNOWN_FLAGS
+   || ( !!( flags & 0x00000040 ) != !!( flags & 0x00000080 ) )
+  )
+{
+    return -1;
+}
 
-uint16 unknown_2EA[65*65];
+if( flags & PROPERTY_8 )
+{
+    uint16 unknown_8[361]; // seems to be some 19*19 grid
+}
+
+if( flags & PROPERTY_2DA )
+{
+    uint32 unknown_2DA[4];
+}
+
+if( flags & LAYER_0 )
+{
+    uint16 unknown_2EA[65*65];
+}
 
 if( flags & LAYER_1 )
 {
     uint16 height_map[65*65];
 }
 
-uint16 unknown_44EE[40];
+if( flags & UNKNOWN_0x00000040 || flags & UNKNOWN_0x00000080)
+{
+    uint16 unknown_44EE[40];
+}
 
-if( flags & LAYER_1 )
+if( flags & LAYER_2 )
 {
     char shadow_map[65*65];
 }
@@ -72,9 +101,19 @@ if( flags & LAYER_3 )
     char unknown_55BF[64*64];
 }
 
+if( flags & PROPERTY_65BE )
+{
+    byte unknown_65BE;
+}
+
 if( flags & PROPERTY_65BF )
 {
     uint32 unknown_65BF[4];
+}
+
+if( flags & LAYER_0x04000000 )
+{
+    char unknown_0x04000000[0x5344];
 }
 
 if( flags & LAYER_4 )

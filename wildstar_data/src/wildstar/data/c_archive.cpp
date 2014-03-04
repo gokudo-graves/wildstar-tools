@@ -44,6 +44,8 @@ namespace wildstar
         void
         CArchive::writeBlock( quint32 block, QIODevice& destination )
         {
+            // TODO: to extract large blocks / files forward the io device
+            // to package and implement writing in smaller chunks there
             destination.write( package_.readBlock( block ) );
         }
 
