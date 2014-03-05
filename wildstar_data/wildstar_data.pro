@@ -44,7 +44,8 @@ HEADERS  += \
     include/wildstar/data/c_hash.h \
     include/wildstar/data/area/c_area.h \
     include/wildstar/data/area/c_chunk.h \
-    include/wildstar/data/i_streamable.h
+    include/wildstar/data/i_streamable.h \
+    include/wildstar/data/c_array.h
 
 unix {
     target.path = /usr/lib

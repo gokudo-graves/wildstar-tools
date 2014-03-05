@@ -4,11 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       += core
+QT       += core gui
 
-QT       -= gui
-
-TARGET = wildstar_area
 CONFIG   += console
 CONFIG   -= app_bundle
 
@@ -18,10 +15,10 @@ TEMPLATE = app
 SOURCES += main.cpp
 
 CONFIG( debug, debug|release ) {
-    TARGET = wildstar_package_d
+    TARGET = wildstar_area_d
     LIBS += -L$$OUT_PWD/../wildstar_data/debug/ -lwildstar_data_d
 } else {
-    TARGET = wildstar_package
+    TARGET = wildstar_area
     LIBS += -L$$OUT_PWD/../wildstar_data/release/ -lwildstar_data
 }
 
