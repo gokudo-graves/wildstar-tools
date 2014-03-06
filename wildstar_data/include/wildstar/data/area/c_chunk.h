@@ -16,7 +16,8 @@ namespace wildstar
             public:
                 enum Flags
                 {
-                    LAYER_0x00000001    = 0x00000001
+                    SIZE_MASK           = 0x00ffffff
+                  , LAYER_0x00000001    = 0x00000001
                   , PROPERTY_0x00000002 = 0x00000002
                   , LAYER_0x00000004    = 0x00000004
                   , HEIGHT_MAP          = 0x00000008

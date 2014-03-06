@@ -51,20 +51,20 @@ namespace wildstar
 
         //----------------------------------------------------------------------
         void
-        CArchive::extractFile( const CHash& hash, QIODevice& destination )
+        CArchive::extractFile( const CIndexFileNode& node, QIODevice& destination )
         {
-            if( !files_.contains( hash ) )
+            if( !files_.contains( node.hash() ) )
             {
                 // throw EFileNotFound
             }
 
-            const File& file( files_.value( hash ) );
+            const File& file( files_.value( node.hash() ) );
             QByteArray data_out( package_.readBlock( file.block_index ) );
-            if( data_out.size() < file.size )
+            if( node.compressedSize() < node.size() )
             {
                 QByteArray data;
                 QDataStream stream( &data, QIODevice::WriteOnly );
-                stream << (quint32)file.size;
+                stream << (quint32)node.size();
                 data.append( data_out );
                 data_out = qUncompress( data );
             }

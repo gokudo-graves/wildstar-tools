@@ -121,7 +121,7 @@ CExtractCommand::extractFile(const wildstar::data::CIndexFileNode* node, const Q
     QFile       out( out_file_path );
     std::cout << "extracting: " << qPrintable( out_file_path ) << "\n";
     out.open( QIODevice::WriteOnly );
-    archive_.extractFile( node->hash(), out );
+    archive_.extractFile( *node, out );
     out.close();
 
     return 0;

@@ -53,7 +53,7 @@ namespace wildstar
 
             virtual void open( const QString& file_name = QString() );
             virtual void writeBlock( quint32 block, QIODevice& destination );
-            virtual void extractFile( const CHash& hash, QIODevice& destination );
+            virtual void extractFile( const CIndexFileNode& node, QIODevice& destination );
 
             virtual bool contains( const CHash& hash ) const;
 
