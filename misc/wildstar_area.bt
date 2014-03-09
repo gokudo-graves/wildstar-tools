@@ -73,12 +73,12 @@ if( flags & PROPERTY_8 )
 
 if( flags & PROPERTY_2DA )
 {
-    uint32 unknown_2DA[4];
+    uint32 texture_ids[4];
 }
 
 if( flags & LAYER_0 )
 {
-    uint16 unknown_2EA[65*65];
+    uint16 texture_blending[65*65]; // 4bit per texture blending
 }
 
 if( flags & LAYER_1 )
