@@ -41,12 +41,12 @@ namespace wildstar
 
                 if( flags_ & PROPERTY_0x00000002 )
                 {
-                    stream >> unknown_2DA;
+                    stream >> texture_ids;
                 }
 
                 if( flags_ & LAYER_0x00000004 )
                 {
-                    stream >> unknown_2EA;
+                    stream >> texture_blend;
                 }
 
                 if( flags_ & HEIGHT_MAP )
