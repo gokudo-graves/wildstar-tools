@@ -43,7 +43,7 @@ namespace wildstar
             public:
                 quint32                 flags_;
                 CArray<quint16,19*19>   heigh_map;      // height map 16x16 + 3 vertices overlapping
-                CArray<quint32,4>       texture_ids;
+                CArray<quint32,4>       texture_ids;    // id into WorldLayer.tbl
                 CArray<quint16,65*65>   texture_blend;  // texture maping 4bit per texture
                 CArray<quint16,65*65>   color_map;      // R5G6B5 most likely
                 CArray<quint16,40>      unknown_44EE;
