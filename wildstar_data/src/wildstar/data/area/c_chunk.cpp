@@ -27,6 +27,7 @@ namespace wildstar
             {
                 quint32 size;
                 chunk_stream >> size;
+                size &= 0xffffff;
                 QByteArray data( size, 0 );
                 chunk_stream.readRawData( data.data(), size );
                 QDataStream stream( data );
@@ -36,7 +37,7 @@ namespace wildstar
 
                 if( flags_ & LAYER_0x00000001 )
                 {
-                    stream >> unkown_8;
+                    stream >> heigh_map;
                 }
 
                 if( flags_ & PROPERTY_0x00000002 )
@@ -51,7 +52,7 @@ namespace wildstar
 
                 if( flags_ & HEIGHT_MAP )
                 {
-                    stream >> height_map;
+                    stream >> color_map;
                 }
 
                 if(    flags_ & UNKNOWN_0x00000040

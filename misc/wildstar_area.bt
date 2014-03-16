@@ -68,7 +68,7 @@ if(     flags & UNKNOWN_FLAGS
 
 if( flags & PROPERTY_8 )
 {
-    uint16 unknown_8[361]; // seems to be some 19*19 grid
+    uint16 height_map[19*19]; // maybe signed int16
 }
 
 if( flags & PROPERTY_2DA )
@@ -83,7 +83,8 @@ if( flags & LAYER_0 )
 
 if( flags & LAYER_1 )
 {
-    uint16 height_map[65*65];
+    // color map?? 16 bit R5G6B5 ?? not realy height map
+    uint16 color_map[65*65];
 }
 
 if( flags & UNKNOWN_0x00000040 || flags & UNKNOWN_0x00000080)

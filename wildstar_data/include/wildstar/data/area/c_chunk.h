@@ -42,10 +42,10 @@ namespace wildstar
             //private:
             public:
                 quint32                 flags_;
-                CArray<quint16,19*19>   unkown_8; // looks like a lowres version of the height map
+                CArray<quint16,19*19>   heigh_map;      // height map 16x16 + 3 vertices overlapping
                 CArray<quint32,4>       texture_ids;
-                CArray<quint16,65*65>   texture_blend; // texture maping
-                CArray<quint16,65*65>   height_map;
+                CArray<quint16,65*65>   texture_blend;  // texture maping 4bit per texture
+                CArray<quint16,65*65>   color_map;      // R5G6B5 most likely
                 CArray<quint16,40>      unknown_44EE;
                 CArray<quint8,65*65>    shadow_map;
                 CArray<quint8,64*64>    unknown_55BF;
