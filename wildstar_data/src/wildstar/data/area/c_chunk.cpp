@@ -37,7 +37,7 @@ namespace wildstar
 
                 if( flags_ & LAYER_0x00000001 )
                 {
-                    stream >> heigh_map;
+                    stream >> height_map;
                 }
 
                 if( flags_ & PROPERTY_0x00000002 )

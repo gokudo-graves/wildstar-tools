@@ -41,6 +41,7 @@ private:
     int yRot;
     int zRot;
     int xPos;
+    int yPos;
     int zPos;
     QPoint lastPos;
     const wildstar::data::area::CArea* area_;
