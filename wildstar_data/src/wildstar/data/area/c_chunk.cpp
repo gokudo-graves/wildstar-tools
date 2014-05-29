@@ -35,22 +35,22 @@ namespace wildstar
 
                 stream >> flags_;
 
-                if( flags_ & LAYER_0x00000001 )
+                if( flags_ & HEIGHT_MAP )
                 {
                     stream >> height_map;
                 }
 
-                if( flags_ & PROPERTY_0x00000002 )
+                if( flags_ & TEXTURE_IDS )
                 {
                     stream >> texture_ids;
                 }
 
-                if( flags_ & LAYER_0x00000004 )
+                if( flags_ & TEXTURE_BLEND )
                 {
                     stream >> texture_blend;
                 }
 
-                if( flags_ & HEIGHT_MAP )
+                if( flags_ & COLOR_MAP )
                 {
                     stream >> color_map;
                 }

@@ -42,7 +42,7 @@ int main( int argc, char *argv[] )
 
         CArea area;
         stream >> area;
-        int chunk_width(19), chunk_height(chunk_width);
+        int chunk_width(16), chunk_height(chunk_width);
 
         QImage image( 16*chunk_width, 16*chunk_height, QImage::Format_RGB32 );
 
@@ -59,7 +59,7 @@ int main( int argc, char *argv[] )
                         int x( ix * chunk_width  + cx )
                           , y( iy * chunk_height + cy )
                           ;
-                        quint16 height( chunk.heigh_map [cy*chunk_height+cx] );
+                        quint16 height( chunk.height_map[cy*19+cx] );
                         uint color( 0 );
                         color |= (height & 0x001F) << 3;
                         color |= (height & 0x07E0) << 5;

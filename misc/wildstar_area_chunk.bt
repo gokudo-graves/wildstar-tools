@@ -1,0 +1,39 @@
+//--------------------------------------
+//--- 010 Editor v3.0.3 Binary Template
+//
+// File:
+// Author:
+// Revision:
+// Purpose:
+//--------------------------------------
+
+LittleEndian();
+
+uint16 size;
+uint16 unknown_2;
+
+
+
+uint16 unknown_4;
+uint16 flags;
+uint16 unknown_8[361]; // seems to be some 19*19 grid
+
+uint32 unknown_2DA[4];
+
+uint16 unknown_2EA[65*65];
+
+uint16 height_map[65*65];
+
+uint16 unknown_44EE[40];
+
+char unknown_453E[65*65];
+
+char unknown_55BF[64*64];
+
+uint32 unknown_65BF[4];
+
+char unknown_65CF[64*64];
+
+uint32 unknown_75CF[4];
+
+uint16 unknown_75DF[65*65];

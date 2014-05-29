@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       -= gui
+QT       += gui
 
 CONFIG( debug, debug|release ) {
     TARGET = wildstar_data_d
@@ -29,7 +29,8 @@ SOURCES += \
     src/wildstar/data/c_hash.cpp \
     src/wildstar/data/area/c_area.cpp \
     src/wildstar/data/area/c_chunk.cpp \
-    src/wildstar/data/i_streamable.cpp
+    src/wildstar/data/i_streamable.cpp \
+    src/wildstar/data/c_tex_handler.cpp
 
 HEADERS  += \
     include/wildstar/data/global.h \
@@ -45,7 +46,8 @@ HEADERS  += \
     include/wildstar/data/area/c_area.h \
     include/wildstar/data/area/c_chunk.h \
     include/wildstar/data/i_streamable.h \
-    include/wildstar/data/c_array.h
+    include/wildstar/data/c_array.h \
+    include/wildstar/data/c_tex_handler.h
 
 unix {
     target.path = /usr/lib

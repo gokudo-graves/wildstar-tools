@@ -17,10 +17,10 @@ namespace wildstar
                 enum Flags
                 {
                     SIZE_MASK           = 0x00ffffff
-                  , LAYER_0x00000001    = 0x00000001
-                  , PROPERTY_0x00000002 = 0x00000002
-                  , LAYER_0x00000004    = 0x00000004
-                  , HEIGHT_MAP          = 0x00000008
+                  , HEIGHT_MAP          = 0x00000001
+                  , TEXTURE_IDS         = 0x00000002
+                  , TEXTURE_BLEND       = 0x00000004
+                  , COLOR_MAP           = 0x00000008
                   , UNKNOWN_0x00000040  = 0x00000040
                   , UNKNOWN_0x00000080  = 0x00000080
                   , SHADOW_MAP          = 0x00000100
