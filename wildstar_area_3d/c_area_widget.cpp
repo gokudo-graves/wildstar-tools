@@ -154,10 +154,10 @@ CAreaWidget::paintGL()
                 GLfloat x( tile_x );
                 for ( int col(1); col< cols; ++col, x += chunk_step )
                 {
-                    GLfloat y1( height_map[( col - 1 ) + (row - 1 )*cols] & 0x7fff );
-                    GLfloat y2( height_map[( col - 1 ) + (row + 0 )*cols] & 0x7fff );
-                    GLfloat y3( height_map[( col + 0 ) + (row + 0 )*cols] & 0x7fff );
-                    GLfloat y4( height_map[( col + 0 ) + (row - 1 )*cols] & 0x7fff );
+                    GLfloat y1( height_map[( col - 1 ) + (row - 1 )*cols] );
+                    GLfloat y2( height_map[( col - 1 ) + (row + 0 )*cols] );
+                    GLfloat y3( height_map[( col + 0 ) + (row + 0 )*cols] );
+                    GLfloat y4( height_map[( col + 0 ) + (row - 1 )*cols] );
                     y1 = -2048.0 + y1 * y_scale;
                     y2 = -2048.0 + y2 * y_scale;
                     y3 = -2048.0 + y3 * y_scale;

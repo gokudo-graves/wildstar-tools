@@ -1,6 +1,6 @@
 #include <QDebug>
 
-#include <QApplication>
+#include <QGuiApplication>
 #include <QDataStream>
 #include <QFile>
 
@@ -11,7 +11,7 @@ using wildstar::data::area::CArea;
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QGuiApplication a(argc, argv);
     CMainWindow w;
     QFile area_file( a.arguments().at( 1 ) );
     area_file.open( QIODevice::ReadOnly );

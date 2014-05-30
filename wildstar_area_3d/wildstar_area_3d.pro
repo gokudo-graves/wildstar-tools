@@ -4,17 +4,22 @@
 #
 #-------------------------------------------------
 
-QT       += opengl widgets
+include( common/common.pri )
 
 TEMPLATE = app
 
+INCLUDEPATH += common
+
 SOURCES += main.cpp\
     c_area_widget.cpp \
+    c_area_scene.cpp \
     c_main_window.cpp
 
 HEADERS  += \
     c_area_widget.h \
     c_main_window.h
+
+RESOURCES += wildstar_area_3d.qrc
 
 CONFIG( debug, debug|release ) {
     TARGET = wildstar_area_3d_d
