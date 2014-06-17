@@ -40,8 +40,9 @@ CAreaScene::CAreaScene(const wildstar::data::area::CArea* area, QObject* parent 
     m_modelMatrix.setToIdentity();
 
     // Initialize the camera position and orientation
-    m_camera->setPosition( QVector3D( 0.0f, 1132.0f, 0.0f ) );
-    m_camera->setViewCenter( QVector3D( 1.0f, 1132.0f, 1.0f ) );
+    const float height( 32 );//1132.0 );
+    m_camera->setPosition( QVector3D( 0.0f, height, 0.0f ) );
+    m_camera->setViewCenter( QVector3D( 1.0f, height, 1.0f ) );
     m_camera->setUpVector( QVector3D( 0.0f, 1.0f, 0.0f ) );
 
     m_displayModeNames << QStringLiteral( "shaderSimpleWireFrame" )
@@ -236,50 +237,27 @@ CAreaScene::prepareTextures()
     QImage heightMapImage( "Western.3c3d.png" );
     m_funcs->glActiveTexture( GL_TEXTURE0 );
     //TexturePtr height_map( new QOpenGLTexture( heightMapImage, QOpenGLTexture::DontGenerateMipMaps ) );
-    //TexturePtr height_map( new QOpenGLTexture( QOpenGLTexture::Target2DArray ) );
-    TexturePtr height_map( new QOpenGLTexture( QOpenGLTexture::Target2D ) );
-    height_map->setFormat( QOpenGLTexture::R16I );
+    TexturePtr height_map( new QOpenGLTexture( QOpenGLTexture::Target2DArray ) );
+    //TexturePtr height_map( new QOpenGLTexture( QOpenGLTexture::Target2D ) );
+    height_map->setFormat( QOpenGLTexture::R8U );
     int width( CChunk::HEIGHT_MAP_COLUMNS ), height( CChunk::HEIGHT_MAP_ROWS );
     height_map->setSize( width, height );
-    //height_map->setLayers( area_->chunks().count() );
+    height_map->setLayers( area_->chunks().count() );
     height_map->allocateStorage();
     int layer(0);
-    const CChunk& chunk( area_->chunks().at(1) );
-    void* data( const_cast<quint16*>( chunk.height_map.data() ) );
-    height_map->setData( 0, QOpenGLTexture::Red_Integer, QOpenGLTexture::Int16, data );
+    foreach( const CChunk& chunk, area_->chunks() )
+    {
+        const CChunk::HeighMap& map( chunk.height_map );
+        quint8 data[CChunk::HEIGHT_MAP_ENTRIES] = {};
+        for( int i = 0; i < CChunk::HEIGHT_MAP_ENTRIES; ++i )
+        {
+            data[i] = (map[i] >> 8 );
+        }
+        height_map->setData( 0, layer++, QOpenGLTexture::Red_Integer, QOpenGLTexture::UInt8, data );
+    }
     m_heightMapSize.setHeight( height );
     m_heightMapSize.setWidth( width );
     m_material->setTextureUnitConfiguration( 0, height_map, sampler, QByteArrayLiteral( "heightMap" ) );
-
-    /*
-    SamplerPtr tilingSampler( new Sampler );
-    tilingSampler->create();
-    tilingSampler->setMinificationFilter( GL_LINEAR_MIPMAP_LINEAR );
-    m_funcs->glSamplerParameterf( tilingSampler->samplerId(), GL_TEXTURE_MAX_ANISOTROPY_EXT, 16.0f );
-    tilingSampler->setMagnificationFilter( GL_LINEAR );
-    tilingSampler->setWrapMode( Sampler::DirectionS, GL_REPEAT );
-    tilingSampler->setWrapMode( Sampler::DirectionT, GL_REPEAT );
-
-    QImage grassImage( "../terrain_tessellation/grass.png" );
-    m_funcs->glActiveTexture( GL_TEXTURE1 );
-    TexturePtr grassTexture( new QOpenGLTexture( grassImage ) );
-    grassTexture->bind();
-    m_material->setTextureUnitConfiguration( 1, grassTexture, tilingSampler, QByteArrayLiteral( "grassTexture" ) );
-
-    QImage rockImage( "../terrain_tessellation/rock.png" );
-    m_funcs->glActiveTexture( GL_TEXTURE2 );
-    TexturePtr rockTexture( new QOpenGLTexture( rockImage ) );
-    rockTexture->bind();
-    m_material->setTextureUnitConfiguration( 2, rockTexture, tilingSampler, QByteArrayLiteral( "rockTexture" ) );
-
-    QImage snowImage( "../terrain_tessellation/snowrocks.png" );
-    m_funcs->glActiveTexture( GL_TEXTURE3 );
-    TexturePtr snowTexture( new QOpenGLTexture( snowImage ) );
-    snowTexture->bind();
-    m_material->setTextureUnitConfiguration( 3, snowTexture, tilingSampler, QByteArrayLiteral( "snowTexture" ) );
-    */
-
-    m_funcs->glActiveTexture( GL_TEXTURE0 );
 }
 
 //------------------------------------------------------------------------------
