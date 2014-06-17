@@ -3,6 +3,7 @@
 
 #include "abstractscene.h"
 #include "material.h"
+#include "wildstar/data/area/c_area.h"
 
 #include <QOpenGLBuffer>
 #include <QOpenGLDebugLogger>
@@ -20,7 +21,7 @@ class CAreaScene : public AbstractScene
     Q_OBJECT
 
 public:
-    CAreaScene( QObject* parent = 0 );
+    CAreaScene( const wildstar::data::area::CArea* area, QObject* parent = 0 );
 
     virtual void initialise();
     virtual void update( float t );
@@ -105,6 +106,8 @@ private:
 
     QOpenGLFunctions_4_0_Core* m_funcs;
     QSize m_heightMapSize;
+
+    const wildstar::data::area::CArea* area_;
 };
 
 #endif // C_AREA_SCENE_H

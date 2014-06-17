@@ -1,6 +1,6 @@
 #include "c_main_window.h"
 
-#include "terraintessellationscene.h"
+#include "c_area_scene.h"
 
 #include <QCoreApplication>
 #include <QKeyEvent>
@@ -8,9 +8,9 @@
 #include <QTimer>
 
 //------------------------------------------------------------------------------
-CMainWindow::CMainWindow( QScreen* screen )
+CMainWindow::CMainWindow( const wildstar::data::area::CArea* area, QScreen* screen )
     : QWindow( screen ),
-      m_scene( new TerrainTessellationScene( this ) ),
+      m_scene( new CAreaScene( area, this ) ),
       m_leftButtonPressed( false )
 {
     // Tell Qt we will use OpenGL for this window
@@ -51,7 +51,8 @@ CMainWindow::CMainWindow( QScreen* screen )
 }
 
 //------------------------------------------------------------------------------
-void CMainWindow::initializeGL()
+void
+CMainWindow::initializeGL()
 {
     m_context->makeCurrent( this );
     m_scene->initialise();
@@ -59,7 +60,8 @@ void CMainWindow::initializeGL()
 }
 
 //------------------------------------------------------------------------------
-void CMainWindow::paintGL()
+void
+CMainWindow::paintGL()
 {
     // Make the context current
     m_context->makeCurrent( this );
@@ -72,14 +74,16 @@ void CMainWindow::paintGL()
 }
 
 //------------------------------------------------------------------------------
-void CMainWindow::resizeGL()
+void
+CMainWindow::resizeGL()
 {
     m_context->makeCurrent( this );
     m_scene->resize( width(), height() );
 }
 
 //------------------------------------------------------------------------------
-void CMainWindow::updateScene()
+void
+CMainWindow::updateScene()
 {
     float time = m_time.elapsed() / 1000.0f;
     m_scene->update( time );
@@ -87,10 +91,10 @@ void CMainWindow::updateScene()
 }
 
 //------------------------------------------------------------------------------
-void CMainWindow::keyPressEvent( QKeyEvent* e )
+void
+CMainWindow::keyPressEvent( QKeyEvent* e )
 {
     const float speed = 44.7f; // in m/s. Equivalent to 100 miles/hour
-    TerrainTessellationScene* scene = static_cast<TerrainTessellationScene*>( m_scene );
     switch ( e->key() )
     {
         case Qt::Key_Escape:
@@ -98,95 +102,95 @@ void CMainWindow::keyPressEvent( QKeyEvent* e )
             break;
 
         case Qt::Key_D:
-            scene->setSideSpeed( speed );
+            m_scene->setSideSpeed( speed );
             break;
 
         case Qt::Key_A:
-            scene->setSideSpeed( -speed );
+            m_scene->setSideSpeed( -speed );
             break;
 
         case Qt::Key_W:
-            scene->setForwardSpeed( speed );
+            m_scene->setForwardSpeed( speed );
             break;
 
         case Qt::Key_S:
-            scene->setForwardSpeed( -speed );
+            m_scene->setForwardSpeed( -speed );
             break;
 
         case Qt::Key_PageUp:
-            scene->setVerticalSpeed( speed );
+            m_scene->setVerticalSpeed( speed );
             break;
 
         case Qt::Key_PageDown:
-            scene->setVerticalSpeed( -speed );
+            m_scene->setVerticalSpeed( -speed );
             break;
 
         case Qt::Key_Shift:
-            scene->setViewCenterFixed( true );
+            m_scene->setViewCenterFixed( true );
             break;
 
         case Qt::Key_Plus:
-            scene->setTerrainHorizontalScale( scene->terrainHorizontalScale() + 0.1 );
+            m_scene->setTerrainHorizontalScale( m_scene->terrainHorizontalScale() + 0.1 );
             break;
 
         case Qt::Key_Minus:
-            scene->setTerrainHorizontalScale( scene->terrainHorizontalScale() - 0.1 );
+            m_scene->setTerrainHorizontalScale( m_scene->terrainHorizontalScale() - 0.1 );
             break;
 
         case Qt::Key_Home:
-            scene->setTerrainVerticalScale( scene->terrainVerticalScale() + 0.05 );
+            m_scene->setTerrainVerticalScale( m_scene->terrainVerticalScale() + 0.05 );
             break;
 
         case Qt::Key_End:
-            scene->setTerrainVerticalScale( scene->terrainVerticalScale() - 0.05 );
+            m_scene->setTerrainVerticalScale( m_scene->terrainVerticalScale() - 0.05 );
             break;
 
         case Qt::Key_BracketLeft:
-            scene->setSunAngle( scene->sunAngle() - 0.2 );
+            m_scene->setSunAngle( m_scene->sunAngle() - 0.2 );
             break;
 
         case Qt::Key_BracketRight:
-            scene->setSunAngle( scene->sunAngle() + 0.2 );
+            m_scene->setSunAngle( m_scene->sunAngle() + 0.2 );
             break;
 
         case Qt::Key_Comma:
-            scene->setScreenSpaceError( scene->screenSpaceError() + 0.1 );
+            m_scene->setScreenSpaceError( m_scene->screenSpaceError() + 0.1 );
             break;
 
         case Qt::Key_Period:
-            scene->setScreenSpaceError( scene->screenSpaceError() - 0.1 );
+            m_scene->setScreenSpaceError( m_scene->screenSpaceError() - 0.1 );
             break;
 
         case Qt::Key_F1:
-            scene->setDisplayMode( TerrainTessellationScene::TexturedAndLit );
+            m_scene->setDisplayMode( CAreaScene::TexturedAndLit );
             break;
 
         case Qt::Key_F2:
-            scene->setDisplayMode( TerrainTessellationScene::SimpleWireFrame );
+            m_scene->setDisplayMode( CAreaScene::SimpleWireFrame );
             break;
 
         case Qt::Key_F3:
-            scene->setDisplayMode( TerrainTessellationScene::WorldHeight );
+            m_scene->setDisplayMode( CAreaScene::WorldHeight );
             break;
 
         case Qt::Key_F4:
-            scene->setDisplayMode( TerrainTessellationScene::WorldNormals );
+            m_scene->setDisplayMode( CAreaScene::WorldNormals );
             break;
 
         case Qt::Key_F5:
-            scene->setDisplayMode( TerrainTessellationScene::Grass );
+            m_scene->setDisplayMode( CAreaScene::Grass );
             break;
 
         case Qt::Key_F6:
-            scene->setDisplayMode( TerrainTessellationScene::GrassAndRocks );
+            m_scene->setDisplayMode( CAreaScene::GrassAndRocks );
             break;
 
         case Qt::Key_F7:
-            scene->setDisplayMode( TerrainTessellationScene::GrassRocksAndSnow );
+            m_scene->setDisplayMode( CAreaScene::GrassRocksAndSnow );
             break;
 
         case Qt::Key_F8:
-            scene->setDisplayMode( TerrainTessellationScene::LightingFactors );
+            m_scene->setDisplayMode( CAreaScene::LightingFactors );
             break;
 
         default:
@@ -195,28 +199,28 @@ void CMainWindow::keyPressEvent( QKeyEvent* e )
 }
 
 //------------------------------------------------------------------------------
-void CMainWindow::keyReleaseEvent( QKeyEvent* e )
+void
+CMainWindow::keyReleaseEvent( QKeyEvent* e )
 {
-    TerrainTessellationScene* scene = static_cast<TerrainTessellationScene*>( m_scene );
     switch ( e->key() )
     {
         case Qt::Key_D:
         case Qt::Key_A:
-            scene->setSideSpeed( 0.0f );
+            m_scene->setSideSpeed( 0.0f );
             break;
 
         case Qt::Key_W:
         case Qt::Key_S:
-            scene->setForwardSpeed( 0.0f );
+            m_scene->setForwardSpeed( 0.0f );
             break;
 
         case Qt::Key_PageUp:
         case Qt::Key_PageDown:
-            scene->setVerticalSpeed( 0.0f );
+            m_scene->setVerticalSpeed( 0.0f );
             break;
 
         case Qt::Key_Shift:
-            scene->setViewCenterFixed( false );
+            m_scene->setViewCenterFixed( false );
             break;
 
         default:
@@ -225,7 +229,8 @@ void CMainWindow::keyReleaseEvent( QKeyEvent* e )
 }
 
 //------------------------------------------------------------------------------
-void CMainWindow::mousePressEvent( QMouseEvent* e )
+void
+CMainWindow::mousePressEvent( QMouseEvent* e )
 {
     if ( e->button() == Qt::LeftButton )
     {
@@ -236,7 +241,8 @@ void CMainWindow::mousePressEvent( QMouseEvent* e )
 }
 
 //------------------------------------------------------------------------------
-void CMainWindow::mouseReleaseEvent( QMouseEvent* e )
+void
+CMainWindow::mouseReleaseEvent( QMouseEvent* e )
 {
     if ( e->button() == Qt::LeftButton )
         m_leftButtonPressed = false;
@@ -244,7 +250,8 @@ void CMainWindow::mouseReleaseEvent( QMouseEvent* e )
 }
 
 //------------------------------------------------------------------------------
-void CMainWindow::mouseMoveEvent( QMouseEvent* e )
+void
+CMainWindow::mouseMoveEvent( QMouseEvent* e )
 {
     if ( m_leftButtonPressed )
     {
@@ -253,12 +260,12 @@ void CMainWindow::mouseMoveEvent( QMouseEvent* e )
         float dy = -0.2f * ( m_pos.y() - m_prevPos.y() );
         m_prevPos = m_pos;
 
-        TerrainTessellationScene* scene = static_cast<TerrainTessellationScene*>( m_scene );
-        scene->pan( dx );
-        scene->tilt( dy );
+        m_scene->pan( dx );
+        m_scene->tilt( dy );
     }
 
     QWindow::mouseMoveEvent( e );
 
 }
+
 //------------------------------------------------------------------------------

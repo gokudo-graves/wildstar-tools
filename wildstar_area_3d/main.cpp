@@ -12,7 +12,6 @@ using wildstar::data::area::CArea;
 int main(int argc, char *argv[])
 {
     QGuiApplication a(argc, argv);
-    CMainWindow w;
     QFile area_file( a.arguments().at( 1 ) );
     area_file.open( QIODevice::ReadOnly );
 
@@ -21,9 +20,9 @@ int main(int argc, char *argv[])
 
     CArea area;
     area.read( stream );
-
     qDebug() << area_file.fileName();
-    w.setArea( &area );
+
+    CMainWindow w( &area );
 
     w.show();
     return a.exec();

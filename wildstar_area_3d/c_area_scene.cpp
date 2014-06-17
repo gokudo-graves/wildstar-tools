@@ -1,6 +1,8 @@
 #include "c_area_scene.h"
 #include "camera.h"
 
+#include <string.h>
+
 #include <QImage>
 #include <QGLWidget>
 #include <QOpenGLContext>
@@ -9,9 +11,13 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+using wildstar::data::area::CChunk;
+
+//------------------------------------------------------------------------------
 const float degToRad = float( M_PI / 180.0 );
 
-CAreaScene::CAreaScene( QObject* parent )
+//------------------------------------------------------------------------------
+CAreaScene::CAreaScene(const wildstar::data::area::CArea* area, QObject* parent )
     : AbstractScene( parent ),
       m_camera( new Camera( this ) ),
       m_v(),
@@ -22,19 +28,20 @@ CAreaScene::CAreaScene( QObject* parent )
       m_screenSpaceError( 12.0f ),
       m_modelMatrix(),
       m_horizontalScale( 500.0f ),
-      m_verticalScale( 20.0f ),
+      m_verticalScale( 1.0f / 8.0f ),
       m_sunTheta( 30.0f ),
       m_time( 0.0f ),
       m_metersToUnits( 0.05f ), // 500 units == 10 km => 0.05 units/m
       m_displayMode( SimpleWireFrame ),
       m_displayModeSubroutines( DisplayModeCount ),
-      m_funcs( 0 )
+      m_funcs( 0 ),
+      area_(area)
 {
     m_modelMatrix.setToIdentity();
 
     // Initialize the camera position and orientation
-    m_camera->setPosition( QVector3D( 250.0f, 10.0f, 250.0f ) );
-    m_camera->setViewCenter( QVector3D( 250.0f, 10.0f, 249.0f ) );
+    m_camera->setPosition( QVector3D( 0.0f, 1132.0f, 0.0f ) );
+    m_camera->setViewCenter( QVector3D( 1.0f, 1132.0f, 1.0f ) );
     m_camera->setUpVector( QVector3D( 0.0f, 1.0f, 0.0f ) );
 
     m_displayModeNames << QStringLiteral( "shaderSimpleWireFrame" )
@@ -47,7 +54,9 @@ CAreaScene::CAreaScene( QObject* parent )
                        << QStringLiteral( "shadeTexturedAndLit" );
 }
 
-void CAreaScene::initialise()
+//------------------------------------------------------------------------------
+void
+CAreaScene::initialise()
 {
     m_funcs = m_context->versionFunctions<QOpenGLFunctions_4_0_Core>();
     if ( !m_funcs )
@@ -90,7 +99,9 @@ void CAreaScene::initialise()
     }
 }
 
-void CAreaScene::update( float t )
+//------------------------------------------------------------------------------
+void
+CAreaScene::update( float t )
 {
     m_modelMatrix.setToIdentity();
 
@@ -117,7 +128,9 @@ void CAreaScene::update( float t )
     }
 }
 
-void CAreaScene::render()
+//------------------------------------------------------------------------------
+void
+CAreaScene::render()
 {
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
@@ -167,7 +180,9 @@ void CAreaScene::render()
     }
 }
 
-void CAreaScene::resize( int w, int h )
+//------------------------------------------------------------------------------
+void
+CAreaScene::resize( int w, int h )
 {
     // Make sure the viewport covers the entire window
     glViewport( 0, 0, w, h );
@@ -195,7 +210,9 @@ void CAreaScene::resize( int w, int h )
     shader->setUniformValue( "viewportMatrix", m_viewportMatrix );
 }
 
-void CAreaScene::prepareShaders()
+//------------------------------------------------------------------------------
+void
+CAreaScene::prepareShaders()
 {
     m_material = MaterialPtr( new Material );
     m_material->setShaders( ":/shaders/terraintessellation.vert",
@@ -205,7 +222,9 @@ void CAreaScene::prepareShaders()
                             ":/shaders/terraintessellation.frag" );
 }
 
-void CAreaScene::prepareTextures()
+//------------------------------------------------------------------------------
+void
+CAreaScene::prepareTextures()
 {
     SamplerPtr sampler( new Sampler );
     sampler->create();
@@ -214,12 +233,25 @@ void CAreaScene::prepareTextures()
     sampler->setWrapMode( Sampler::DirectionS, GL_CLAMP_TO_EDGE );
     sampler->setWrapMode( Sampler::DirectionT, GL_CLAMP_TO_EDGE );
 
-    QImage heightMapImage( "../terrain_tessellation/heightmap-1024x1024.png" );
+    QImage heightMapImage( "Western.3c3d.png" );
     m_funcs->glActiveTexture( GL_TEXTURE0 );
-    TexturePtr heightMap( new QOpenGLTexture( heightMapImage, QOpenGLTexture::DontGenerateMipMaps) );
-    m_heightMapSize = heightMapImage.size();
-    m_material->setTextureUnitConfiguration( 0, heightMap, sampler, QByteArrayLiteral( "heightMap" ) );
+    //TexturePtr height_map( new QOpenGLTexture( heightMapImage, QOpenGLTexture::DontGenerateMipMaps ) );
+    //TexturePtr height_map( new QOpenGLTexture( QOpenGLTexture::Target2DArray ) );
+    TexturePtr height_map( new QOpenGLTexture( QOpenGLTexture::Target2D ) );
+    height_map->setFormat( QOpenGLTexture::R16I );
+    int width( CChunk::HEIGHT_MAP_COLUMNS ), height( CChunk::HEIGHT_MAP_ROWS );
+    height_map->setSize( width, height );
+    //height_map->setLayers( area_->chunks().count() );
+    height_map->allocateStorage();
+    int layer(0);
+    const CChunk& chunk( area_->chunks().at(1) );
+    void* data( const_cast<quint16*>( chunk.height_map.data() ) );
+    height_map->setData( 0, QOpenGLTexture::Red_Integer, QOpenGLTexture::Int16, data );
+    m_heightMapSize.setHeight( height );
+    m_heightMapSize.setWidth( width );
+    m_material->setTextureUnitConfiguration( 0, height_map, sampler, QByteArrayLiteral( "heightMap" ) );
 
+    /*
     SamplerPtr tilingSampler( new Sampler );
     tilingSampler->create();
     tilingSampler->setMinificationFilter( GL_LINEAR_MIPMAP_LINEAR );
@@ -245,20 +277,21 @@ void CAreaScene::prepareTextures()
     TexturePtr snowTexture( new QOpenGLTexture( snowImage ) );
     snowTexture->bind();
     m_material->setTextureUnitConfiguration( 3, snowTexture, tilingSampler, QByteArrayLiteral( "snowTexture" ) );
+    */
 
     m_funcs->glActiveTexture( GL_TEXTURE0 );
 }
 
-void CAreaScene::prepareVertexBuffers( QSize heightMapSize )
+//------------------------------------------------------------------------------
+void
+CAreaScene::prepareVertexBuffers( QSize heightMapSize )
 {
     // Generate patch primitive data to cover the heightmap texture
 
     // Each patch consists of a single point located at the lower-left corner
     // of a rectangle (in the xz-plane)
-    const int maxTessellationLevel = 64;
-    const int trianglesPerHeightSample = 10;
-    const int xDivisions = trianglesPerHeightSample * heightMapSize.width() / maxTessellationLevel;
-    const int zDivisions = trianglesPerHeightSample * heightMapSize.height() / maxTessellationLevel;
+    const int xDivisions = 1; //heightMapSize.width();
+    const int zDivisions = 1; //heightMapSize.height();
     m_patchCount = xDivisions * zDivisions;
     QVector<float> positionData( 2 * m_patchCount ); // 2 floats per vertex
     qDebug() << "Total number of patches =" << m_patchCount;
@@ -283,7 +316,9 @@ void CAreaScene::prepareVertexBuffers( QSize heightMapSize )
     m_patchBuffer.release();
 }
 
-void CAreaScene::prepareVertexArrayObject()
+//------------------------------------------------------------------------------
+void
+CAreaScene::prepareVertexArrayObject()
 {
     // Create a VAO for this "object"
     m_vao.create();
@@ -296,3 +331,5 @@ void CAreaScene::prepareVertexArrayObject()
         shader->setAttributeBuffer( "vertexPosition", GL_FLOAT, 0, 2 );
     }
 }
+
+//------------------------------------------------------------------------------

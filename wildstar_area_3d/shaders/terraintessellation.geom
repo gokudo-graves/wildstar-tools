@@ -1,7 +1,7 @@
 #version 400
 
 layout( triangles ) in;
-layout( triangle_strip, max_vertices = 3 ) out;
+layout( line_strip, max_vertices = 3 ) out;
 
 in worldVertex {
     vec4 worldPosition;
@@ -56,6 +56,7 @@ void main()
     gl_Position = gl_in[0].gl_Position;
     EmitVertex();
 
+    /*
     // Vertex 1 (b)
     Out.edgeDistance = vec3( 0, hb, 0 );
     Out.worldPosition = In[1].worldPosition;
@@ -65,6 +66,7 @@ void main()
     Out.texCoords = In[1].texCoords;
     gl_Position = gl_in[1].gl_Position;
     EmitVertex();
+    */
 
     // Vertex 2 (c)
     Out.edgeDistance = vec3( 0, 0, hc );

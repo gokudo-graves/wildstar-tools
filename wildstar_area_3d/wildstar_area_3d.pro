@@ -17,6 +17,7 @@ SOURCES += main.cpp\
 
 HEADERS  += \
     c_area_widget.h \
+    c_area_scene.h \
     c_main_window.h
 
 RESOURCES += wildstar_area_3d.qrc

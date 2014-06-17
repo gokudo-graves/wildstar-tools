@@ -9,8 +9,8 @@
 #include <QPair>
 #include <QSharedPointer>
 
-typedef QSharedPointer<QOpenGLShaderProgram> QOpenGLShaderProgramPtr;
-typedef QSharedPointer<QOpenGLShaderProgram> TexturePtr;
+typedef QSharedPointer<QOpenGLShaderProgram>    QOpenGLShaderProgramPtr;
+typedef QSharedPointer<QOpenGLTexture>          TexturePtr;
 
 class TextureUnitConfiguration : public QPair<TexturePtr, SamplerPtr>
 {

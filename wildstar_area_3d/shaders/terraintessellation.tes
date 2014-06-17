@@ -4,6 +4,7 @@ layout( quads, fractional_even_spacing, cw ) in;
 
 in terrainVertex {
     vec2 position;
+    int chunk;
 } In[];
 
 out worldVertex {
@@ -14,7 +15,7 @@ out worldVertex {
     vec2 texCoords;
 } Out;
 
-uniform sampler2D heightMap;
+uniform isampler2D heightMap;
 
 // The number of triangles created per height-map texel
 uniform int maxTrianglesPerTexel = 10;
@@ -23,7 +24,7 @@ uniform int maxTrianglesPerTexel = 10;
 uniform float horizontalScale = 10.0;
 
 // Vertical scale to multiply height samples by
-uniform float verticalScale = 0.4;
+uniform float verticalScale = 1.0 / 8.0;
 
 // Transformation matrices
 uniform mat4 modelMatrix;
@@ -32,19 +33,20 @@ uniform mat3 worldNormalMatrix;
 uniform mat3 normalMatrix;
 uniform mat4 mvp;
 
-const float maxTessLevel = 64.0;
+const float maxTessLevel = 18.0;
 
 void main()
 {
+    const float scale_horizintal = 2.0;
     // Calculate extent of this patch in texture coords [0,1]
-    vec2 patchExtent = maxTessLevel / ( textureSize( heightMap, 0 ) * maxTrianglesPerTexel );
+    vec2 patchExtent = maxTessLevel / ( textureSize( heightMap, 0 ) );
 
     // Calculate the texture coordinates
     Out.texCoords = In[0].position.xy + gl_TessCoord.xy * patchExtent;
 
     // Calculate the model-space position
     vec4 position;
-    position.xz = Out.texCoords * horizontalScale;
+    position.xz = Out.texCoords * scale_horizintal;
     position.y = verticalScale * texture( heightMap, Out.texCoords ).r;
     position.w = 1.0;
 
@@ -57,7 +59,7 @@ void main()
     // This would be a good candidate for a compute shader.
     // For deformable terrain, would need re-generating when terrain is modified
     const ivec3 offset = ivec3( -1, 0, 1 ); // Texel offsets
-    float delta = 2.0 * horizontalScale / textureSize( heightMap, 0 ).x; // Horizontal displacement in world coords
+    float delta = 2.0 * scale_horizintal / textureSize( heightMap, 0 ).x; // Horizontal displacement in world coords
     float left   = verticalScale * textureOffset( heightMap, Out.texCoords, offset.xy ).r;
     float right  = verticalScale * textureOffset( heightMap, Out.texCoords, offset.zy ).r;
     float top    = verticalScale * textureOffset( heightMap, Out.texCoords, offset.yz ).r;

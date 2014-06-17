@@ -4,7 +4,7 @@
 #include <QWindow>
 #include <QTime>
 
-class AbstractScene;
+#include "c_area_scene.h"
 
 class QOpenGLContext;
 
@@ -13,9 +13,7 @@ class CMainWindow : public QWindow
     Q_OBJECT
 
 public:
-    CMainWindow( QScreen* screen = 0 );
-
-    virtual void setArea( const wildstar::data::area::CArea* area );
+    CMainWindow( const wildstar::data::area::CArea* area, QScreen* screen = 0 );
 
 private:
     void initializeGL();
@@ -34,12 +32,11 @@ protected:
 
 private:
     QOpenGLContext* m_context;
-    AbstractScene* m_scene;
+    CAreaScene* m_scene;
     bool m_leftButtonPressed;
     QPoint m_prevPos;
     QPoint m_pos;
     QTime m_time;
-    CAreaWidget     area_widget_;
 };
 
 #endif // C_MAIN_WINDOW_H

@@ -34,6 +34,14 @@ namespace wildstar
                   , UNKNOWN_FLAGS       = 0xC39EFE00
                 };
 
+                enum  {
+                    HEIGHT_MAP_ROWS     = 19                // 16x16 + 3 vertices overlapping
+                  , HEIGHT_MAP_COLUMNS  = HEIGHT_MAP_ROWS
+                  , HEIGHT_MAP_ENTRIES  = HEIGHT_MAP_ROWS*HEIGHT_MAP_COLUMNS
+                };
+
+                typedef CArray<quint16, HEIGHT_MAP_ENTRIES> HeighMap;
+
                 CChunk();
                 virtual ~CChunk();
 
@@ -42,7 +50,7 @@ namespace wildstar
             //private:
             public:
                 quint32                 flags_;
-                CArray<quint16,19*19>   height_map;     // height map 16x16 + 3 vertices overlapping
+                HeighMap                height_map;
                 CArray<quint32,4>       texture_ids;    // id into WorldLayer.tbl
                 CArray<quint16,65*65>   texture_blend;  // texture maping 4bit per texture
                 CArray<quint16,65*65>   color_map;      // R5G6B5 most likely
@@ -52,7 +60,7 @@ namespace wildstar
                 quint8                  unknown_65BE;
                 CArray<quint32,4>       unknown_65BF;
                 CArray<quint8,0x5344>   unknown_0x04000000;
-                CArray<quint8,64*64>    unknown_65CF; // maybe colisions
+                CArray<quint8,64*64>    unknown_65CF;   // maybe colisions
                 CArray<quint32,4>       unknown_75CF;
                 CArray<quint16,65*65>   unknown_75DF;
             };
