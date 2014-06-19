@@ -40,7 +40,7 @@ namespace wildstar
                   , HEIGHT_MAP_ENTRIES  = HEIGHT_MAP_ROWS*HEIGHT_MAP_COLUMNS
                 };
 
-                typedef CArray<quint16, HEIGHT_MAP_ENTRIES> HeighMap;
+                typedef CArray<qint16, HEIGHT_MAP_ENTRIES> HeighMap;
 
                 CChunk();
                 virtual ~CChunk();

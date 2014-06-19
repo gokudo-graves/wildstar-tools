@@ -6,43 +6,20 @@ layout( vertices = 1 ) out;
 // xz position from vertex shader
 in terrainVertex {
     vec2 position;
-    int chunk;
 } In[];
 
 // xz position to tessellation evaluation shader
 out terrainVertex {
     vec2 position;
-    int chunk;
 } Out[];
 
-uniform isampler2DArray heightMap;
 
-// Fully tessellated!
-const float tessellationLevel = 64.0;
-
-// The number of triangles created per height-map texel
-uniform int maxTrianglesPerTexel = 10;
-
-// Distance between each tessellation point at max tess level
-uniform float horizontalScale = 10.0;
-
-// Vertical scale to multiply height samples by
-uniform float verticalScale = 0.4;
-
-// Transformation matrix
-uniform mat4 mvp;
-
-uniform float pixelsPerTriangleEdge = 12.0;
-
-uniform vec2 viewportSize;
-
-const float maxTessLevel = 18.0;
+const float maxTessLevel = 16.0;
 
 void main()
 {
     // Pass along the vertex position unmodified
     Out[gl_InvocationID].position = In[gl_InvocationID].position;
-    Out[gl_InvocationID].chunk = gl_InvocationID;
 
     gl_TessLevelOuter[0] = maxTessLevel;
     gl_TessLevelOuter[1] = maxTessLevel;

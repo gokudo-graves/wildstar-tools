@@ -32,14 +32,14 @@ uniform sampler2D grassTexture;
 uniform sampler2D rockTexture;
 uniform sampler2D snowTexture;
 
-uniform float colorStop1 = 0.0;
-uniform float colorStop2 = 4.0;
-uniform float colorStop3 = 8.0;
-uniform float colorStop4 = 12.0;
+uniform float colorStop1 = 1120.0;
+uniform float colorStop2 = 1124.0;
+uniform float colorStop3 = 1128.0;
+uniform float colorStop4 = 1133.0;
 
-uniform vec4 color1 = vec4( 0.00, 0.55, 0.00, 1.00 );
-uniform vec4 color2 = vec4( 0.89, 0.68, 0.00, 1.00 );
-uniform vec4 color3 = vec4( 0.75, 0.00, 0.00, 1.00 );
+uniform vec4 color1 = vec4( 0.00, 1.00, 0.00, 1.00 );
+uniform vec4 color2 = vec4( 1.00, 1.00, 0.00, 1.00 );
+uniform vec4 color3 = vec4( 1.00, 0.00, 0.00, 1.00 );
 uniform vec4 color4 = vec4( 1.00, 1.00, 1.00, 1.00 );
 
 in wireFrameVertex {
@@ -281,6 +281,7 @@ void main()
 {
     // Compute fragment color depending upon selected shading mode
     vec4 c = shaderModel();
+    c = shadeWorldHeight();
 
     // Blend with fog color
     float dist = abs( position.z );

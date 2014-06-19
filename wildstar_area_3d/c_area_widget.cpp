@@ -148,7 +148,7 @@ CAreaWidget::paintGL()
         for( int tile_col(0); tile_col < 16; ++tile_col, tile_x += tile_step )
         {
             GLfloat z( tile_z );
-            const CArray<quint16,19*19>& height_map( chunks[16*tile_row + tile_col].height_map );
+            const CChunk::HeighMap& height_map( chunks[16*tile_row + tile_col].height_map );
             for ( int row(1); row < rows; ++row, z += chunk_step )
             {
                 GLfloat x( tile_x );

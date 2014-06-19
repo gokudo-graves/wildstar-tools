@@ -111,6 +111,8 @@ void Camera::setFarPlane( const float& farPlane )
     d->m_farPlane = farPlane;
     if ( d->m_projectionType == PerspectiveProjection )
         d->updatePerpectiveProjection();
+    else
+        d->updateOrthogonalProjection();
 }
 
 float Camera::farPlane() const

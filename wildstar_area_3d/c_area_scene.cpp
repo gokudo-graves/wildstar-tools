@@ -27,11 +27,11 @@ CAreaScene::CAreaScene(const wildstar::data::area::CArea* area, QObject* parent 
       m_patchBuffer( QOpenGLBuffer::VertexBuffer ),
       m_screenSpaceError( 12.0f ),
       m_modelMatrix(),
-      m_horizontalScale( 500.0f ),
+      m_horizontalScale( 2.0f * 16.0f ),
       m_verticalScale( 1.0f / 8.0f ),
       m_sunTheta( 30.0f ),
       m_time( 0.0f ),
-      m_metersToUnits( 0.05f ), // 500 units == 10 km => 0.05 units/m
+      m_metersToUnits( 0.5f ), // 500 units == 10 km => 0.05 units/m
       m_displayMode( SimpleWireFrame ),
       m_displayModeSubroutines( DisplayModeCount ),
       m_funcs( 0 ),
@@ -40,7 +40,7 @@ CAreaScene::CAreaScene(const wildstar::data::area::CArea* area, QObject* parent 
     m_modelMatrix.setToIdentity();
 
     // Initialize the camera position and orientation
-    const float height( 32 );//1132.0 );
+    const float height( 1132.0 );
     m_camera->setPosition( QVector3D( 0.0f, height, 0.0f ) );
     m_camera->setViewCenter( QVector3D( 1.0f, height, 1.0f ) );
     m_camera->setUpVector( QVector3D( 0.0f, 1.0f, 0.0f ) );
@@ -87,8 +87,8 @@ CAreaScene::initialise()
 
     // Set the fog parameters
     shader->setUniformValue( "fog.color", QVector4D( 0.65f, 0.77f, 1.0f, 1.0f ) );
-    shader->setUniformValue( "fog.minDistance", 50.0f );
-    shader->setUniformValue( "fog.maxDistance", 128.0f );
+    shader->setUniformValue( "fog.minDistance", 4096.0f );
+    shader->setUniformValue( "fog.maxDistance", 10240.0f );
 
     // Get subroutine indices
     for ( int i = 0; i < DisplayModeCount; ++i)
@@ -192,7 +192,7 @@ CAreaScene::resize( int w, int h )
 
     // Update the projection matrix
     float aspect = static_cast<float>( w ) / static_cast<float>( h );
-    m_camera->setPerspectiveProjection( 25.0f, aspect, 0.1f, 128.0f );
+    m_camera->setPerspectiveProjection( 25.0f, aspect, 0.1f, 10240.0f );
 
     // Update the viewport matrix
     float w2 = w / 2.0f;
@@ -234,29 +234,30 @@ CAreaScene::prepareTextures()
     sampler->setWrapMode( Sampler::DirectionS, GL_CLAMP_TO_EDGE );
     sampler->setWrapMode( Sampler::DirectionT, GL_CLAMP_TO_EDGE );
 
-    QImage heightMapImage( "Western.3c3d.png" );
     m_funcs->glActiveTexture( GL_TEXTURE0 );
-    //TexturePtr height_map( new QOpenGLTexture( heightMapImage, QOpenGLTexture::DontGenerateMipMaps ) );
     TexturePtr height_map( new QOpenGLTexture( QOpenGLTexture::Target2DArray ) );
-    //TexturePtr height_map( new QOpenGLTexture( QOpenGLTexture::Target2D ) );
-    height_map->setFormat( QOpenGLTexture::R8U );
-    int width( CChunk::HEIGHT_MAP_COLUMNS ), height( CChunk::HEIGHT_MAP_ROWS );
+    height_map->setAutoMipMapGenerationEnabled( false );
+    height_map->setFormat( QOpenGLTexture::R16I );
+    int width( 18 ), height( width );
     height_map->setSize( width, height );
     height_map->setLayers( area_->chunks().count() );
     height_map->allocateStorage();
     int layer(0);
     foreach( const CChunk& chunk, area_->chunks() )
     {
-        const CChunk::HeighMap& map( chunk.height_map );
-        quint8 data[CChunk::HEIGHT_MAP_ENTRIES] = {};
-        for( int i = 0; i < CChunk::HEIGHT_MAP_ENTRIES; ++i )
+        qint16 data[height][width];
+        for( int y = 0; y < height; ++y )
         {
-            data[i] = (map[i] >> 8 );
+            for( int x = 0; x < width; ++x )
+            {
+                int idx = y * 19 + x;
+                data[y][x] = chunk.height_map[idx];
+            }
         }
-        height_map->setData( 0, layer++, QOpenGLTexture::Red_Integer, QOpenGLTexture::UInt8, data );
+        height_map->setData( 0, layer++, QOpenGLTexture::Red_Integer, QOpenGLTexture::Int16, data );
     }
-    m_heightMapSize.setHeight( height );
-    m_heightMapSize.setWidth( width );
+    m_heightMapSize.setHeight( 16 );
+    m_heightMapSize.setWidth( 16 );
     m_material->setTextureUnitConfiguration( 0, height_map, sampler, QByteArrayLiteral( "heightMap" ) );
 }
 
@@ -264,29 +265,17 @@ CAreaScene::prepareTextures()
 void
 CAreaScene::prepareVertexBuffers( QSize heightMapSize )
 {
-    // Generate patch primitive data to cover the heightmap texture
-
-    // Each patch consists of a single point located at the lower-left corner
-    // of a rectangle (in the xz-plane)
-    const int xDivisions = 1; //heightMapSize.width();
-    const int zDivisions = 1; //heightMapSize.height();
-    m_patchCount = xDivisions * zDivisions;
+    m_patchCount = area_->chunks().count();
     QVector<float> positionData( 2 * m_patchCount ); // 2 floats per vertex
     qDebug() << "Total number of patches =" << m_patchCount;
 
-    const float dx = 1.0f / static_cast<float>( xDivisions );
-    const float dz = 1.0f / static_cast<float>( zDivisions );
-
-    for ( int j = 0; j < 2 * zDivisions; j += 2 ) {
-        float z = static_cast<float>( j ) * dz * 0.5;
-        for ( int i = 0; i < 2 * xDivisions; i += 2 ) {
-            float x = static_cast<float>( i ) * dx * 0.5;
-            const int index = xDivisions * j + i;
-            positionData[index]     = x;
-            positionData[index + 1] = z;
+    for ( int y = 0; y < heightMapSize.height(); ++y ) {
+        for ( int x = 0; x < heightMapSize.width(); ++x ) {
+            int i = y * heightMapSize.width() + x;
+            positionData[i*2+0] = x * 1.0;
+            positionData[i*2+1] = y * 1.0;
         }
     }
-
     m_patchBuffer.create();
     m_patchBuffer.setUsagePattern( QOpenGLBuffer::StaticDraw );
     m_patchBuffer.bind();

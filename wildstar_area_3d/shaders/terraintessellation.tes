@@ -4,7 +4,6 @@ layout( quads, fractional_even_spacing, cw ) in;
 
 in terrainVertex {
     vec2 position;
-    int chunk;
 } In[];
 
 out worldVertex {
@@ -15,16 +14,18 @@ out worldVertex {
     vec2 texCoords;
 } Out;
 
-uniform usampler2DArray heightMap;
+uniform isampler2DArray heightMap;
 
 // The number of triangles created per height-map texel
 uniform int maxTrianglesPerTexel = 10;
+
+const float maxTessLevel = 18.0;
 
 // Distance between each tessellation point at max tess level
 uniform float horizontalScale = 10.0;
 
 // Vertical scale to multiply height samples by
-uniform float verticalScale = 1.0; //1.0 / 8.0;
+uniform float verticalScale = 1.0 / 8.0;
 
 // Transformation matrices
 uniform mat4 modelMatrix;
@@ -33,23 +34,21 @@ uniform mat3 worldNormalMatrix;
 uniform mat3 normalMatrix;
 uniform mat4 mvp;
 
-const float maxTessLevel = 18.0;
-
 void main()
 {
-    const float scale_horizintal = 2.0;
-    // Calculate extent of this patch in texture coords [0,1]
-    vec2 patchExtent = maxTessLevel / ( textureSize( heightMap, 0 ).xy );
+    const float scale_horizintal = 2.0 * 16;
 
     // Calculate the texture coordinates
-    Out.texCoords = In[0].position.xy + gl_TessCoord.xy * patchExtent;
+    Out.texCoords = gl_TessCoord.xy;
     vec3 tex_coords;
+    vec2 patch_pos = In[0].position * scale_horizintal;
+    float index = In[0].position.x + In[0].position.y * 16.0;
     tex_coords.xy = Out.texCoords;
-    tex_coords.z = 0;
+    tex_coords.z = index;
 
     // Calculate the model-space position
     vec4 position;
-    position.xz = Out.texCoords * scale_horizintal;
+    position.xz = patch_pos + Out.texCoords * 2.0 * 17.0;
     position.y = verticalScale * texture( heightMap, tex_coords ).r;
     position.w = 1.0;
 
@@ -62,7 +61,7 @@ void main()
     // This would be a good candidate for a compute shader.
     // For deformable terrain, would need re-generating when terrain is modified
     const ivec3 offset = ivec3( -1, 0, 1 ); // Texel offsets
-    float delta = 2.0 * scale_horizintal / textureSize( heightMap, 0 ).x; // Horizontal displacement in world coords
+    float delta = 2.0 * scale_horizintal; // Horizontal displacement in world coords
     float left   = verticalScale * textureOffset( heightMap, tex_coords, offset.xy ).r;
     float right  = verticalScale * textureOffset( heightMap, tex_coords, offset.zy ).r;
     float top    = verticalScale * textureOffset( heightMap, tex_coords, offset.yz ).r;
