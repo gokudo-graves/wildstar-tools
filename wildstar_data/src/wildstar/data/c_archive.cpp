@@ -16,8 +16,7 @@ namespace wildstar
     namespace data
     {
         //----------------------------------------------------------------------
-        CArchive::CArchive( const QString& file_name ) :
-            package_( file_name )
+        CArchive::CArchive()
         {
             clear();
         }

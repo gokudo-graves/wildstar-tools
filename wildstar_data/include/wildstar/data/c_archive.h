@@ -48,7 +48,7 @@ namespace wildstar
 
             typedef QMap<CHash, File>     FileMap;
 
-            explicit CArchive( const QString& file_name = QString() );
+            explicit CArchive();
             virtual ~CArchive();
 
             virtual void open( const QString& file_name = QString() );

@@ -15,8 +15,8 @@ public:
 private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
-    void testCurrentIndexFiles();
-    void testCurrentIndexFiles_data();
+    void testFiles();
+    void testDevice();
 };
 
 TestCPackage::TestCPackage()
@@ -31,29 +31,44 @@ void TestCPackage::cleanupTestCase()
 {
 }
 
-void TestCPackage::testCurrentIndexFiles()
+void TestCPackage::testFiles()
 {
-    //QBuffer buffer;
-    //const char data[] = {};
-    //buffer.setData( data, sizeof( data ) );
-
-    QFETCH( QString, file_name );
-    QFETCH( quint32, block_count );
     CPackage pack;
-    pack.open( file_name );
-    QCOMPARE( pack.getBlockCount(), block_count );
+    pack.open( ":/misc/minimal.pack" );
+    QCOMPARE( pack.getBlockCount(), 1u );
+    QCOMPARE( pack.readTypeBlock(), QByteArray() );
+    QCOMPARE( pack.readBlock( 0 ), QByteArray() );
 
+    pack.open( ":/misc/small.pack" );
+    QCOMPARE( pack.getBlockCount(), 3u );
+    QCOMPARE( pack.readTypeBlock().data(), "Type Block" );
+    QCOMPARE( pack.readBlock( 0 ).data(), "" );
+    QCOMPARE( pack.readBlock( 1 ).data(), "Data Block 1" );
+    QCOMPARE( pack.readBlock( 2 ), pack.readTypeBlock() );
+}
+
+void TestCPackage::testDevice()
+{
+    CPackage pack;
+    pack.open( new QFile( ":/misc/small.pack" ) );
+    QCOMPARE( pack.getBlockCount(), 3u );
+    QCOMPARE( pack.readTypeBlock().data(), "Type Block" );
+    QCOMPARE( pack.readBlock( 0 ).data(), "" );
+    QCOMPARE( pack.readBlock( 1 ).data(), "Data Block 1" );
+    QCOMPARE( pack.readBlock( 2 ), pack.readTypeBlock() );
+}
+
+/*
     //QFETCH(QString, data);
     //QVERIFY2(true, "Failure");
-}
-
 void TestCPackage::testCurrentIndexFiles_data()
 {
-    QTest::addColumn<QString>( "file_name" );
     QTest::addColumn<quint32>( "block_count" );
-    QTest::newRow("0")  << ":/misc/Client64.index"  << 3u;
-    QTest::newRow("1")  << ":/misc/Patch.index"     << 3u;
+    QTest::addColumn<QString>( "file_name" );
+    QTest::newRow("0") << 3u << ":/misc/minimal.pack";
+    QTest::newRow("1") << 3u << ":/misc/small.pack";
 }
+*/
 
 QTEST_APPLESS_MAIN(TestCPackage)
 

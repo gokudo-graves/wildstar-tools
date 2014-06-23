@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>misc/Client64.index</file>
-        <file>misc/Patch.index</file>
+        <file>misc/minimal.pack</file>
+        <file>misc/small.pack</file>
     </qresource>
 </RCC>

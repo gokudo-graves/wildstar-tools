@@ -19,9 +19,8 @@ namespace wildstar
         QString CArchiveIndex::SEPERATOR("/");
 
         //----------------------------------------------------------------------
-        CArchiveIndex::CArchiveIndex( const QString& file_name ) :
-            package_( file_name )
-          , root_( NULL )
+        CArchiveIndex::CArchiveIndex() :
+            root_( NULL )
         {
             clear();
         }

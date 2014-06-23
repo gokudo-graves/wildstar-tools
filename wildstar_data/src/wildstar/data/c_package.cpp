@@ -2,6 +2,7 @@
 
 #include <cstring>
 #include <QDataStream>
+#include <QFile>
 
 #include "wildstar/data/exception.h"
 
@@ -10,8 +11,7 @@ namespace wildstar
     namespace data
     {
         //----------------------------------------------------------------------
-        CPackage::CPackage( const QString& file_name ) :
-            file_( file_name )
+        CPackage::CPackage()
         {
             clear();
         }
@@ -20,13 +20,22 @@ namespace wildstar
         void
         CPackage::open( const QString& file_name )
         {
-            if( !file_name.isNull() )
+            QFile* file( new QFile( file_name ) );
+            if( !file->exists() )
             {
-                file_.close();
-                file_.setFileName( file_name );
+                throw EInvalidFileNotExist();
             }
+            open( file );
+        }
+
+        //----------------------------------------------------------------------
+        void
+        CPackage::open( QIODevice* device )
+        {
             clear();
-            checkFile();
+
+            device_ = device;
+            checkDevice();
 
             loadHeader();
             checkHeader();
@@ -46,8 +55,8 @@ namespace wildstar
         QByteArray
         CPackage::read( qint64 offset, qint64 bytes )
         {
-            file_.seek( offset );
-            return file_.read( bytes );
+            device_->seek( offset );
+            return device_->read( bytes );
         }
 
         //----------------------------------------------------------------------
@@ -101,19 +110,14 @@ namespace wildstar
 
         //----------------------------------------------------------------------
         void
-        CPackage::checkFile()
+        CPackage::checkDevice()
         {
-            if( !file_.exists() )
-            {
-                throw EInvalidFileNotExist();
-            }
-
-            if( file_.size() < sizeof(header_) )
+            if( device_->size() < HEADER_SIZE )
             {
                 throw EInvalidFileSize();
             }
 
-            if( !file_.isOpen() && !file_.open( QIODevice::ReadOnly ) )
+            if( !device_->isOpen() && !device_->open( QIODevice::ReadOnly ) )
             {
                 throw EInvalidFileNotReadable();
             }
@@ -133,7 +137,7 @@ namespace wildstar
                 throw EInvalidFileVersion();
             }
 
-            if(    ( header_.file_size > file_.size() )
+            if(    ( header_.file_size > device_->size() )
                 || ( header_.block_descriptions_offset & 0xF )
                 || ( header_.block_descriptions_offset > header_.file_size )
                 || ( header_.type_block_index >= header_.block_count )

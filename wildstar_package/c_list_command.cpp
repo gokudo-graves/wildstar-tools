@@ -43,9 +43,9 @@ CListCommand::execute( QCommandLineParser& parser )
         parser.showHelp( 1 );
     }
     QString filename( args.at( 1 ) );
-    CArchiveIndex file( filename );
 
-    file.open();
+    CArchiveIndex file;
+    file.open( filename );
     QString path( args.size() == 3 ? args.at( 2) : "" );
     const CIndexDirectoryNode* node( file.directory( path ) );
     if( node == NULL )

@@ -1,7 +1,8 @@
 #ifndef WILDSTAR_DATA_C_PACKAGE_H
 #define WILDSTAR_DATA_C_PACKAGE_H
 
-#include <QFile>
+#include <QIODevice>
+#include <QPointer>
 
 #include "global.h"
 
@@ -41,13 +42,16 @@ namespace wildstar
               , MINIMUM_FILE_SIZE       = 0x240
               , HEADER_SIZE             = 0x230
               , BLOCK_DESCRIPTION_SIZE  = 0x10
+              , BLOCK_PREFIX            = 0x8
+              , BLOCK_POSTFIX           = BLOCK_PREFIX
               , MINIMUM_BLOCK_OFFSET    = MINIMUM_FILE_SIZE
             };
 
-            explicit CPackage( const QString& file_name = QString() );
+            explicit CPackage();
             virtual ~CPackage() {}
 
-            virtual void open( const QString& file_name = QString() );
+            virtual void open( const QString& file_name );
+            virtual void open( QIODevice* device );
 
             virtual quint32 getBlockCount() const;
 
@@ -59,14 +63,14 @@ namespace wildstar
             virtual void loadHeader();
             virtual void loadBlocks();
 
-            virtual void checkFile();
+            virtual void checkDevice();
             virtual void checkHeader() const;
             virtual void checkBlocks() const;
 
             virtual QByteArray read( qint64 offset, qint64 bytes );
 
         private:
-            QFile                       file_;
+            QPointer<QIODevice>         device_;
             Header                      header_;
             QList<BlockDescription>     blocks_;
         };
