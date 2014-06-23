@@ -28,6 +28,7 @@ uniform struct MaterialInfo
     float shininess;    // Specular shininess exponent
 } material;
 
+uniform sampler2D compassTexture;
 uniform sampler2D grassTexture;
 uniform sampler2D rockTexture;
 uniform sampler2D snowTexture;
@@ -282,6 +283,8 @@ void main()
     // Compute fragment color depending upon selected shading mode
     vec4 c = shaderModel();
     c = shadeWorldHeight();
+    vec4 compass_color = texture( compassTexture, worldPosition.xz / 512.0 );
+    //c = mix( compass_color, c, 0.5 );
 
     // Blend with fog color
     float dist = abs( position.z );

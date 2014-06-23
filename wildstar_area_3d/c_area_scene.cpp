@@ -259,6 +259,43 @@ CAreaScene::prepareTextures()
     m_heightMapSize.setHeight( 16 );
     m_heightMapSize.setWidth( 16 );
     m_material->setTextureUnitConfiguration( 0, height_map, sampler, QByteArrayLiteral( "heightMap" ) );
+
+    m_funcs->glActiveTexture( GL_TEXTURE0 );
+
+    SamplerPtr compass_sampler( new Sampler );
+    compass_sampler->create();
+    compass_sampler->setMinificationFilter( GL_LINEAR_MIPMAP_LINEAR );
+    m_funcs->glSamplerParameterf( compass_sampler->samplerId(), GL_TEXTURE_MAX_ANISOTROPY_EXT, 16.0f );
+    compass_sampler->setMagnificationFilter( GL_LINEAR );
+    compass_sampler->setWrapMode( Sampler::DirectionS, GL_REPEAT );
+    compass_sampler->setWrapMode( Sampler::DirectionT, GL_REPEAT );
+
+    QImage compass_image( "Western.3c3d.tex.bmp" );
+    m_funcs->glActiveTexture( GL_TEXTURE1 );
+    TexturePtr compass( new QOpenGLTexture( compass_image ) );
+    m_material->setTextureUnitConfiguration( 1, compass, compass_sampler, QByteArrayLiteral( "compassTexture" ) );
+
+    SamplerPtr tiling_sampler( new Sampler );
+    tiling_sampler->create();
+    tiling_sampler->setMinificationFilter( GL_LINEAR_MIPMAP_LINEAR );
+    m_funcs->glSamplerParameterf( tiling_sampler->samplerId(), GL_TEXTURE_MAX_ANISOTROPY_EXT, 16.0f );
+    tiling_sampler->setMagnificationFilter( GL_LINEAR );
+    tiling_sampler->setWrapMode( Sampler::DirectionS, GL_REPEAT );
+    tiling_sampler->setWrapMode( Sampler::DirectionT, GL_REPEAT );
+
+    /*
+    m_funcs->glActiveTexture( GL_TEXTURE2 );
+    TexturePtr terrain( new QOpenGLTexture( QOpenGLTexture::Target2DArray ) );
+    terrain->setAutoMipMapGenerationEnabled( false );
+    terrain->setFormat( QOpenGLTexture::R16I );
+    terrain->setSize( 1024, 1024 );
+    terrain->setLayers( area_->chunks().count() );
+    terrain->allocateStorage();
+    int layer(0);
+    m_material->setTextureUnitConfiguration( 1, compass, compass_sampler, QByteArrayLiteral( "terrainTexture" ) );
+    */
+
+    m_funcs->glActiveTexture( GL_TEXTURE0 );
 }
 
 //------------------------------------------------------------------------------
