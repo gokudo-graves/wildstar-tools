@@ -29,4 +29,4 @@ include( $$common_pri )
 #DEPENDPATH += $$PWD/../../../wildstar_data/include
 
 RESOURCES += \
-    test_files.qrc
+    c_package.qrc

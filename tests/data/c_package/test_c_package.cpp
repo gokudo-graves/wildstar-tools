@@ -15,8 +15,8 @@ public:
 private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
-    void testCase1();
-    void testCase1_data();
+    void testCurrentIndexFiles();
+    void testCurrentIndexFiles_data();
 };
 
 TestCPackage::TestCPackage()
@@ -31,23 +31,28 @@ void TestCPackage::cleanupTestCase()
 {
 }
 
-void TestCPackage::testCase1()
+void TestCPackage::testCurrentIndexFiles()
 {
-    QBuffer buffer;
-    const char data[] = {};
-    buffer.setData( data, sizeof( data ) );
+    //QBuffer buffer;
+    //const char data[] = {};
+    //buffer.setData( data, sizeof( data ) );
 
+    QFETCH( QString, file_name );
+    QFETCH( quint32, block_count );
     CPackage pack;
-    pack.open( buffer );
+    pack.open( file_name );
+    QCOMPARE( pack.getBlockCount(), block_count );
 
     //QFETCH(QString, data);
     //QVERIFY2(true, "Failure");
 }
 
-void TestCPackage::testCase1_data()
+void TestCPackage::testCurrentIndexFiles_data()
 {
-    QTest::addColumn<QString>("data");
-    QTest::newRow("0") << QString();
+    QTest::addColumn<QString>( "file_name" );
+    QTest::addColumn<quint32>( "block_count" );
+    QTest::newRow("0")  << ":/misc/Client64.index"  << 3u;
+    QTest::newRow("1")  << ":/misc/Patch.index"     << 3u;
 }
 
 QTEST_APPLESS_MAIN(TestCPackage)
