@@ -34,12 +34,12 @@ void TestCPackage::cleanupTestCase()
 void TestCPackage::testFiles()
 {
     CPackage pack;
-    pack.open( ":/misc/minimal.pack" );
+    pack.read( ":/misc/minimal.pack" );
     QCOMPARE( pack.getBlockCount(), 1u );
     QCOMPARE( pack.readTypeBlock(), QByteArray() );
     QCOMPARE( pack.readBlock( 0 ), QByteArray() );
 
-    pack.open( ":/misc/small.pack" );
+    pack.read( ":/misc/small.pack" );
     QCOMPARE( pack.getBlockCount(), 3u );
     QCOMPARE( pack.readTypeBlock().data(), "Type Block" );
     QCOMPARE( pack.readBlock( 0 ).data(), "" );
@@ -50,7 +50,7 @@ void TestCPackage::testFiles()
 void TestCPackage::testDevice()
 {
     CPackage pack;
-    pack.open( new QFile( ":/misc/small.pack" ) );
+    pack.read( new QFile( ":/misc/small.pack" ) );
     QCOMPARE( pack.getBlockCount(), 3u );
     QCOMPARE( pack.readTypeBlock().data(), "Type Block" );
     QCOMPARE( pack.readBlock( 0 ).data(), "" );

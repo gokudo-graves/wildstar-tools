@@ -14,6 +14,5 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-
 SOURCES += test_c_archive_index.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"

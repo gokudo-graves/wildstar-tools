@@ -51,7 +51,7 @@ namespace wildstar
             explicit CArchive();
             virtual ~CArchive();
 
-            virtual void open( const QString& file_name = QString() );
+            virtual void read( const QString& file_name = QString() );
             virtual void writeBlock( quint32 block, QIODevice& destination );
             virtual void extractFile( const CIndexFileNode& node, QIODevice& destination );
 

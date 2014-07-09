@@ -50,12 +50,12 @@ CExtractCommand::execute( QCommandLineParser& parser )
           , source( args.size() > 2 ? args.at( 2 ) : "" )
           ;
 
-    archive_.open( archive_file_path );
+    archive_.read( archive_file_path );
 
     QFileInfo   file_info( archive_file_path );
     QString     index_file_name( file_info.completeBaseName() + ".index" );
     QString     index_file_path( file_info.dir().filePath( index_file_name ) );
-    index_.open( index_file_path );
+    index_.read( index_file_path );
 
     if( parser.isSet( OPTION_FULL_PATH ) )
     {

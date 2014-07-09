@@ -50,8 +50,8 @@ namespace wildstar
             explicit CPackage();
             virtual ~CPackage() {}
 
-            virtual void open( const QString& file_name );
-            virtual void open( QIODevice* device );
+            virtual void read( const QString& file_name );
+            virtual void read( QIODevice* device );
 
             virtual quint32 getBlockCount() const;
 

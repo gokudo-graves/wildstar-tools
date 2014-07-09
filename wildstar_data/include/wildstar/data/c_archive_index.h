@@ -29,7 +29,7 @@ namespace wildstar
             explicit CArchiveIndex();
             virtual ~CArchiveIndex();
 
-            virtual void open( const QString& file_name = QString() );
+            virtual void read( const QString& file_name = QString() );
 
             const CIndexDirectoryNode& root() const;
             const CIndexDirectoryNode* directory( const QString& path ) const;

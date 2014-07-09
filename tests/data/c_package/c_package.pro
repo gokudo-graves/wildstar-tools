@@ -19,14 +19,5 @@ DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 include( $$common_pri )
 
-#CONFIG( debug, debug|release ) {
-#    LIBS += -L$$PWD/../../../wildstar_data/debug/ -lwildstar_data_d
-#} else {
-#    LIBS += -L$$PWD/../../../wildstar_data/release/ -lwildstar_data
-#}
-#
-#INCLUDEPATH += $$PWD/../../../wildstar_data/include
-#DEPENDPATH += $$PWD/../../../wildstar_data/include
-
 RESOURCES += \
     c_package.qrc

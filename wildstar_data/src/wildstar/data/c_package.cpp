@@ -18,19 +18,19 @@ namespace wildstar
 
         //----------------------------------------------------------------------
         void
-        CPackage::open( const QString& file_name )
+        CPackage::read( const QString& file_name )
         {
             QFile* file( new QFile( file_name ) );
             if( !file->exists() )
             {
                 throw EInvalidFileNotExist();
             }
-            open( file );
+            read( file );
         }
 
         //----------------------------------------------------------------------
         void
-        CPackage::open( QIODevice* device )
+        CPackage::read( QIODevice* device )
         {
             clear();
 
