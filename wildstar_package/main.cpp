@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     parser.addHelpOption();
     parser.addVersionOption();
 
-    const QCommandLineOption    OPTION_INI_FILE(QStringList() << "i" << "ini-file", "ini file with settings to use", "wildstar.ini");
+    const QCommandLineOption    OPTION_INI_FILE(QStringList() << "i" << "ini-file", "ini file with settings to use", "[*.ini]", "wildstar.ini");
     parser.addOption( OPTION_INI_FILE );
 
     CCommandMap     commands;
@@ -31,21 +31,26 @@ int main(int argc, char *argv[])
 
     commands.options( parser );
     parser.parse( app.arguments() );
-    ICommand* command( commands.find( parser ) );
-    parser.clearPositionalArguments();
+    ICommand* command( commands.get( parser ) );
     command->options( parser );
     parser.process( app );
 
-    QSettings settings( parser.value( OPTION_INI_FILE), QSettings::IniFormat );
+    QSettings settings( parser.value( OPTION_INI_FILE ), QSettings::IniFormat );
+    QObject::connect(
+          command, &ICommand::finished
+        , &app, &QCoreApplication::exit
+        , Qt::QueuedConnection
+    );
 
     try
     {
-        return command->execute( settings, parser );
+        command->execute( settings, parser );
     }
     catch ( std::exception& e )
     {
         qDebug() << "Exception: " << e.what();
+        return 1;
     }
 
-    return 1;
+    return app.exec();
 }

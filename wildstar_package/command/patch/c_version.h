@@ -1,6 +1,8 @@
 #ifndef COMMAND_PATCH_C_VERSION_H
 #define COMMAND_PATCH_C_VERSION_H
 
+#include "QNetworkAccessManager"
+
 #include "../c_patch.h"
 
 namespace command {
@@ -11,11 +13,16 @@ class CVersion : public ICommand
 public:
     explicit CVersion( const command::CPatch& patch );
 
+    virtual const QString& name() const;
     virtual void options( QCommandLineParser& parser ) const;
-    virtual int execute( QSettings& settings, QCommandLineParser& parser );
+    virtual void execute( QSettings& settings, QCommandLineParser& parser );
 
 private:
+    static const QString                NAME;
+    static const QUrl                   VERSION_FILE;
+
     const command::CPatch& patch_;
+    QNetworkAccessManager qnam_;
 };
 
 }

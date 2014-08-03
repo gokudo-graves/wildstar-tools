@@ -13,8 +13,10 @@ public:
     CCommandMap();
     virtual ~CCommandMap();
 
+    virtual void add( ICommand* command );
     virtual void options( QCommandLineParser& parser ) const;
-    virtual ICommand* find( QCommandLineParser& parser ) const;
+    virtual ICommand* get( QCommandLineParser& parser ) const;
+    virtual ICommand* get( QCommandLineParser& parser, const QStringList args ) const;
 };
 
 }

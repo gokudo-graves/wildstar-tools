@@ -8,23 +8,25 @@
 
 namespace command
 {
-    class CExtract : public ICommand
-    {
-    public:
-        CExtract();
+class CExtract : public ICommand
+{
+public:
+    CExtract();
 
-        virtual void options( QCommandLineParser& parser ) const;
-        virtual int execute( QSettings& settings, QCommandLineParser& parser );
+    virtual const QString& name() const;
+    virtual void options( QCommandLineParser& parser ) const;
+    virtual void execute( QSettings& settings, QCommandLineParser& parser );
 
-    private:
-        virtual int extractDirectory(const wildstar::data::CIndexDirectoryNode* node, QString destination );
-        virtual int extractFile( const wildstar::data::CIndexFileNode* node, const QString& destination );
+private:
+    virtual void extractDirectory(const wildstar::data::CIndexDirectoryNode* node, QString destination );
+    virtual void extractFile( const wildstar::data::CIndexFileNode* node, const QString& destination );
 
-        wildstar::data::CArchive        archive_;
-        wildstar::data::CArchiveIndex   index_;
+    wildstar::data::CArchive        archive_;
+    wildstar::data::CArchiveIndex   index_;
 
-        static const QCommandLineOption     OPTION_FULL_PATH;
-    };
+    static const QString                NAME;
+    static const QCommandLineOption     OPTION_FULL_PATH;
+};
 
 }
 

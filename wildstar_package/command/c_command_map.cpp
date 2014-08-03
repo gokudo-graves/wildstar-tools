@@ -25,9 +25,17 @@ CCommandMap::options( QCommandLineParser& parser ) const
 
 //------------------------------------------------------------------------------
 ICommand*
-CCommandMap::find( QCommandLineParser& parser ) const
+CCommandMap::get( QCommandLineParser& parser ) const
 {
-    const QStringList args( parser.positionalArguments() );
+    ICommand* command( get( parser, parser.positionalArguments() ) );
+    parser.clearPositionalArguments();
+    return command;
+}
+
+//------------------------------------------------------------------------------
+ICommand*
+CCommandMap::get( QCommandLineParser& parser, const QStringList args ) const
+{
     if( args.isEmpty() )
     {
         parser.showHelp( 1 );
@@ -40,6 +48,13 @@ CCommandMap::find( QCommandLineParser& parser ) const
     }
 
     return it_command.value();
+}
+
+//------------------------------------------------------------------------------
+void
+CCommandMap::add(ICommand* command)
+{
+    insert( command->name(), command );
 }
 
 //------------------------------------------------------------------------------

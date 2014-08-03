@@ -9,25 +9,25 @@
 
 namespace command {
 
-    class CList : public ICommand
-    {
-    public:
-        CList();
+class CList : public ICommand
+{
+public:
+    CList();
 
-        virtual const QString& name() const;
-        virtual void options( QCommandLineParser& parser ) const;
-        virtual int execute( QSettings& settings, QCommandLineParser& parser );
+    virtual const QString& name() const;
+    virtual void options( QCommandLineParser& parser ) const;
+    virtual void execute( QSettings& settings, QCommandLineParser& parser );
 
-    private:
-        virtual void print( const wildstar::data::CIndexDirectoryNode* node, const QString& path = "" ) const;
+private:
+    virtual void print( const wildstar::data::CIndexDirectoryNode* node, const QString& path = "" ) const;
 
-        bool long_listing_;
-        bool show_directories_;
+    bool long_listing_;
+    bool show_directories_;
 
-        static const QString                NAME;
-        static const QCommandLineOption     OPTION_LONG_LISTING;
-        static const QCommandLineOption     OPTION_NO_DIRECTORIES;
-    };
+    static const QString                NAME;
+    static const QCommandLineOption     OPTION_LONG_LISTING;
+    static const QCommandLineOption     OPTION_NO_DIRECTORIES;
+};
 
 }
 

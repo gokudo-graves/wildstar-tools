@@ -13,11 +13,19 @@ class CPatch : public ICommand
 public:
     CPatch();
 
+    virtual const QString& name() const;
     virtual void options( QCommandLineParser& parser ) const;
-    virtual int execute( QSettings& settings, QCommandLineParser& parser );
+    virtual void execute( QSettings& settings, QCommandLineParser& parser );
+
+    virtual const QUrl& baseUrl() const;
 
 private:
+    static const QString                NAME;
     static const QCommandLineOption     OPTION_PATCH_SERVER;
+
+    static CCommandMap  createCommands( const CPatch& patch );
+
+    QStringList arguments( const QCommandLineParser& parser ) const;
 
     const CCommandMap   commands_;
     QUrl    base_url_;

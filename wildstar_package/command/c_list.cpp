@@ -43,8 +43,7 @@ CList::options( QCommandLineParser& parser ) const
 }
 
 //------------------------------------------------------------------------------
-int
-CList::execute( QSettings&, QCommandLineParser& parser )
+void CList::execute( QSettings&, QCommandLineParser& parser )
 {
     const QStringList args( parser.positionalArguments() );
 
@@ -62,12 +61,13 @@ CList::execute( QSettings&, QCommandLineParser& parser )
     {
         // TODO: maybe use qWarning or qFaltal?? or std:cerr?
         std::cout << qPrintable(path) << ": Directory not found.\n";
-        return 1;
+        emit finished( 1 );
+        return;
     }
     long_listing_ = parser.isSet( OPTION_LONG_LISTING );
     show_directories_ = !parser.isSet( OPTION_NO_DIRECTORIES );
     print( node );
-    return 0;
+    emit finished( 0 );
 }
 
 //------------------------------------------------------------------------------

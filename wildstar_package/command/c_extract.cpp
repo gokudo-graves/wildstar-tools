@@ -27,6 +27,13 @@ CExtract::CExtract()
 }
 
 //------------------------------------------------------------------------------
+const QString&
+CExtract::name() const
+{
+    return NAME;
+}
+
+//------------------------------------------------------------------------------
 void
 CExtract::options( QCommandLineParser& parser ) const
 {
@@ -39,7 +46,7 @@ CExtract::options( QCommandLineParser& parser ) const
 }
 
 //------------------------------------------------------------------------------
-int
+void
 CExtract::execute( QSettings&, QCommandLineParser& parser )
 {
     const QStringList args( parser.positionalArguments() );
@@ -70,22 +77,24 @@ CExtract::execute( QSettings&, QCommandLineParser& parser )
     const CIndexDirectoryNode* directory( index_.directory( source ) );
     if( directory == NULL )
     {
-        return extractFile( index_.file( source ), destination );
+        extractFile( index_.file( source ), destination );
     }
     else
     {
-        return extractDirectory( directory, destination );
+        extractDirectory( directory, destination );
     }
+    emit finished( 0 );
 }
 
 //------------------------------------------------------------------------------
-int
+void
 CExtract::extractDirectory( const wildstar::data::CIndexDirectoryNode* node, QString destination )
 {
     if( node == NULL )
     {
         qWarning() << "Directory not found in index.\n";
-        return 1;
+        emit finished( 1 );
+        return;
     }
 
     QDir out_path( destination );
@@ -100,23 +109,23 @@ CExtract::extractDirectory( const wildstar::data::CIndexDirectoryNode* node, QSt
     {
         extractDirectory( directory, destination );
     }
-
-    return 0;
 }
 
 //------------------------------------------------------------------------------
-int
+void
 CExtract::extractFile(const wildstar::data::CIndexFileNode* node, const QString& destination )
 {
     if( node == NULL )
     {
         qWarning() << "File not found in index.\n";
-        return 1;
+        emit finished( 1 );
+        return;
     }
     if( !archive_.contains( node->hash() ) )
     {
         qWarning() << qPrintable( node->hash().toHex() ) << ": File hash not found in archive.\n";
-        return 1;
+        emit finished( 1 );
+        return;
     }
     QDir::current().mkpath( destination );
     QDir        out_path( destination );
@@ -126,8 +135,6 @@ CExtract::extractFile(const wildstar::data::CIndexFileNode* node, const QString&
     out.open( QIODevice::WriteOnly );
     archive_.extractFile( *node, out );
     out.close();
-
-    return 0;
 }
 
 //------------------------------------------------------------------------------
