@@ -15,13 +15,19 @@ TEMPLATE = app
 DESTDIR = $$OUT_PWD/../out
 
 SOURCES += main.cpp\
+    command/c_command_map.cpp \
+    command/c_extract.cpp \
     command/c_list.cpp \
-    command/c_extract.cpp
+    command/c_patch.cpp \
+    command/patch/c_version.cpp
 
 HEADERS  += \
     command/i_command.h \
+    command/c_command_map.h \
+    command/c_extract.h \
     command/c_list.h \
-    command/c_extract.h
+    command/c_patch.h \
+    command/patch/c_version.h
 
 CONFIG( debug, debug|release ) {
     TARGET = wildstar_package_d

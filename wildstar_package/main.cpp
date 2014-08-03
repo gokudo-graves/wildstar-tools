@@ -3,10 +3,13 @@
 #include <QCommandLineOption>
 #include <QCoreApplication>
 
+#include "command/c_command_map.h"
 #include "command/c_extract.h"
 #include "command/c_list.h"
+#include "command/c_patch.h"
 
-typedef QMap<QString, command::ICommand*>    CommandMap;
+using command::CCommandMap;
+using command::ICommand;
 
 int main(int argc, char *argv[])
 {
@@ -21,30 +24,14 @@ int main(int argc, char *argv[])
     const QCommandLineOption    OPTION_INI_FILE(QStringList() << "i" << "ini-file", "ini file with settings to use", "wildstar.ini");
     parser.addOption( OPTION_INI_FILE );
 
-    CommandMap          commands;
-    command::CExtract   extract;
-    command::CList      list;
-    commands.insert( "extract", &extract );
-    commands.insert( "list", &list );
+    CCommandMap     commands;
+    commands.insert( "extract", new command::CExtract() );
+    commands.insert( "list"   , new command::CList()    );
+    commands.insert( "patch"  , new command::CPatch()   );
 
-    QString command_list( QStringList( commands.keys() ).join( "|" ) );
-    parser.addPositionalArgument( "command", app.translate("main", "the command to execute, use <command> --help for detailed information"), command_list );
+    commands.options( parser );
     parser.parse( app.arguments() );
-    const QStringList args( parser.positionalArguments() );
-    if( args.isEmpty() )
-    {
-        parser.showHelp( 1 );
-    }
-
-    const QString command_name( args.at(0) );
-    CommandMap::iterator it_command( commands.find( command_name ) );
-
-    if( it_command == commands.end() )
-    {
-        parser.showHelp( 1 );
-    }
-
-    command::ICommand* command( it_command.value() );
+    ICommand* command( commands.find( parser ) );
     parser.clearPositionalArguments();
     command->options( parser );
     parser.process( app );

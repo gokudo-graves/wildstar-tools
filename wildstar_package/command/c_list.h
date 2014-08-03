@@ -14,6 +14,7 @@ namespace command {
     public:
         CList();
 
+        virtual const QString& name() const;
         virtual void options( QCommandLineParser& parser ) const;
         virtual int execute( QSettings& settings, QCommandLineParser& parser );
 
@@ -23,6 +24,7 @@ namespace command {
         bool long_listing_;
         bool show_directories_;
 
+        static const QString                NAME;
         static const QCommandLineOption     OPTION_LONG_LISTING;
         static const QCommandLineOption     OPTION_NO_DIRECTORIES;
     };

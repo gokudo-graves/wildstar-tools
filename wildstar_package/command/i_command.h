@@ -11,6 +11,7 @@ namespace command
     public:
         virtual ~ICommand() {}
 
+        virtual const QString& name() const = 0;
         virtual void options( QCommandLineParser& parser ) const = 0;
         virtual int execute( QSettings& settings, QCommandLineParser& parser ) = 0;
     };
