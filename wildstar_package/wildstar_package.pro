@@ -12,13 +12,15 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
+DESTDIR = $$OUT_PWD/../out
+
 SOURCES += main.cpp\
     c_list_command.cpp \
     c_extract_command.cpp
 
 HEADERS  += \
-    c_list_command.h \
     i_command.h \
+    c_list_command.h \
     c_extract_command.h
 
 CONFIG( debug, debug|release ) {

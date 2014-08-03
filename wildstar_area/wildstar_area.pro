@@ -11,6 +11,7 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
+DESTDIR = $$OUT_PWD/../out
 
 SOURCES += main.cpp
 

@@ -26,7 +26,7 @@ CListCommand::options( QCommandLineParser& parser ) const
 {
     parser.addPositionalArgument("list", "list files and directories in an index file", "list");
     parser.addPositionalArgument("index-file", "the archive index file", "*.index");
-    parser.addPositionalArgument("directory", "optional directory to output", "[directory]");
+    parser.addPositionalArgument("directory", "optional directory to list", "[directory]");
 
     parser.addOption( OPTION_LONG_LISTING );
     parser.addOption( OPTION_NO_DIRECTORIES );

@@ -10,6 +10,8 @@ TEMPLATE = app
 
 INCLUDEPATH += common
 
+DESTDIR = $$OUT_PWD/../out
+
 SOURCES += main.cpp\
     c_area_widget.cpp \
     c_area_scene.cpp \

@@ -15,6 +15,8 @@ CONFIG( debug, debug|release ) {
 TEMPLATE = lib
 #VERSION = 0.1.0
 
+DESTDIR = $$OUT_PWD/../out
+
 INCLUDEPATH += include
 
 DEFINES += WILDSTAR_DATA_LIBRARY

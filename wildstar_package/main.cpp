@@ -24,15 +24,15 @@ int main(int argc, char *argv[])
         parser.showHelp( 1 );
     }
 
-    ICommand* command( NULL );
+    QMap<QString, ICommand*>    commands;
     CExtractCommand     extract;
     CListCommand        list;
+    commands.insert( "extract", &extract );
+    commands.insert( "list", &list );
+
+    ICommand* command( NULL );
     const QString command_name( args.at(0) );
-    if (command_name == "extract") {
-        command = &extract;
-    } else if (command_name == "list") {
-        command = &list;
-    }
+    command = commands[ command_name ];
 
     if( command == NULL )
     {
