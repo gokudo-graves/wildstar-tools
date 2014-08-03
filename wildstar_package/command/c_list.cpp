@@ -35,7 +35,7 @@ namespace command {
 
     //--------------------------------------------------------------------------
     int
-    CList::execute( QSettings& settings, QCommandLineParser& parser )
+    CList::execute( QSettings&, QCommandLineParser& parser )
     {
         const QStringList args( parser.positionalArguments() );
 
