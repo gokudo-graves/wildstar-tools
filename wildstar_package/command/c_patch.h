@@ -19,16 +19,19 @@ public:
 
     virtual const QUrl& baseUrl() const;
 
+public slots:
+    void version( const QString& version );
+
 private:
     static const QString                NAME;
     static const QCommandLineOption     OPTION_PATCH_SERVER;
 
-    static CCommandMap  createCommands( const CPatch& patch );
-
     QStringList arguments( const QCommandLineParser& parser ) const;
+    CCommandMap createCommands();
 
     const CCommandMap   commands_;
-    QUrl    base_url_;
+    QUrl        base_url_;
+    QString     version_;
 };
 
 }

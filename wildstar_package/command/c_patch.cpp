@@ -2,6 +2,8 @@
 
 #include "command/patch/c_version.h"
 
+using command::patch::CVersion;
+
 namespace command {
 
 //------------------------------------------------------------------------------
@@ -9,16 +11,8 @@ const QString               CPatch::NAME( "patch" );
 const QCommandLineOption    CPatch::OPTION_PATCH_SERVER(QStringList() << "b" << "base-url", "the base url of the patch-server");
 
 //------------------------------------------------------------------------------
-CCommandMap CPatch::createCommands( const CPatch& patch )
-{
-    CCommandMap commands;
-    commands.add( new patch::CVersion( patch ));
-    return commands;
-}
-
-//------------------------------------------------------------------------------
 CPatch::CPatch() :
-    commands_( createCommands( *this ) )
+    commands_( createCommands() )
 {
 }
 
@@ -61,7 +55,11 @@ CPatch::execute( QSettings& settings, QCommandLineParser& parser )
     }
 
     ICommand* command( commands_.get( parser, arguments( parser ) ) );
-    return command->execute( settings, parser );
+    connect(
+        command, &ICommand::finished
+      , this   , &ICommand::finished
+    );
+    command->execute( settings, parser );
 }
 
 //------------------------------------------------------------------------------
@@ -72,12 +70,35 @@ CPatch::baseUrl() const
 }
 
 //------------------------------------------------------------------------------
+void
+CPatch::version( const QString& version )
+{
+    version_ = version;
+}
+
+//------------------------------------------------------------------------------
 QStringList
 CPatch::arguments( const QCommandLineParser& parser ) const
 {
     QStringList args( parser.positionalArguments() );
     args.pop_front();
     return args;
+}
+
+//------------------------------------------------------------------------------
+CCommandMap CPatch::createCommands()
+{
+    CCommandMap commands;
+    CVersion* version( new CVersion( *this ) );
+
+    connect(
+        version, &CVersion::version
+      , this   , &CPatch::version
+    );
+
+    commands.add( version );
+
+    return commands;
 }
 
 //------------------------------------------------------------------------------
