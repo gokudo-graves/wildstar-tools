@@ -1,8 +1,8 @@
 #include <QDebug>
 
 #include <QCommandLineOption>
-#include <QCoreApplication>
 
+#include "c_application.h"
 #include "command/c_command_map.h"
 #include "command/c_extract.h"
 #include "command/c_list.h"
@@ -13,7 +13,7 @@ using command::ICommand;
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication app(argc, argv);
+    CApplication app(argc, argv);
     app.setApplicationVersion( "0.0.1" );
 
     QCommandLineParser parser;
@@ -42,15 +42,12 @@ int main(int argc, char *argv[])
         , Qt::QueuedConnection
     );
 
-    try
-    {
-        command->execute( settings, parser );
-    }
-    catch ( std::exception& e )
-    {
-        qDebug() << "Exception: " << e.what();
-        return 1;
-    }
+    QObject::connect(
+          &app, &CApplication::started
+        , command, &ICommand::execute
+    );
+
+    emit app.started( settings, parser );
 
     return app.exec();
 }

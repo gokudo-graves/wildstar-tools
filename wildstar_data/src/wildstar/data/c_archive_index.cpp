@@ -111,6 +111,13 @@ namespace wildstar
 
             return NULL;
         }
+
+        //----------------------------------------------------------------------
+        int
+        CArchiveIndex::clientBuild() const
+        {
+            return header_.client_build;
+        }
         
         //----------------------------------------------------------------------
         QDataStream&

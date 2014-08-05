@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     command/c_extract.cpp \
     command/c_list.cpp \
     command/c_patch.cpp \
-    command/patch/c_version.cpp
+    command/patch/c_version.cpp \
+    c_application.cpp
 
 HEADERS  += \
     command/i_command.h \
@@ -27,7 +28,8 @@ HEADERS  += \
     command/c_extract.h \
     command/c_list.h \
     command/c_patch.h \
-    command/patch/c_version.h
+    command/patch/c_version.h \
+    c_application.h
 
 CONFIG( debug, debug|release ) {
     TARGET = wildstar_package_d

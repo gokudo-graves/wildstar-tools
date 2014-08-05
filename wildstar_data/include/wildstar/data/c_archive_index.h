@@ -35,6 +35,8 @@ namespace wildstar
             const CIndexDirectoryNode* directory( const QString& path ) const;
             const CIndexFileNode* file( const QString& path ) const;
 
+            virtual int clientBuild() const;
+
         protected:
             virtual void clear();
 

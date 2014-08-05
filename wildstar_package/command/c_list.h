@@ -19,7 +19,8 @@ public:
     virtual void execute( QSettings& settings, QCommandLineParser& parser );
 
 private:
-    virtual void print( const wildstar::data::CIndexDirectoryNode* node, const QString& path = "" ) const;
+    virtual void print( const wildstar::data::CIndexDirectoryNode* node, const QString& prefix ) const;
+    virtual void print( const wildstar::data::CIndexFileNode* node, const QString& prefix ) const;
 
     bool long_listing_;
     bool show_directories_;

@@ -16,6 +16,8 @@ public:
 
     virtual const QString& name() const = 0;
     virtual void options( QCommandLineParser& parser ) const = 0;
+
+public slots:
     virtual void execute( QSettings& settings, QCommandLineParser& parser ) = 0;
 
 signals:
