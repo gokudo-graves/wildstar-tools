@@ -2,7 +2,7 @@
 #define WILDSTAR_DATA_C_HASH_H
 
 #include <QByteArray>
-
+#include <QDataStream>
 #include "global.h"
 
 namespace wildstar

@@ -4,10 +4,10 @@ SUBDIRS += \
     wildstar_data \
     wildstar_package \
     wildstar_area \
-    wildstar_area_3d \
-    tests
+    wildstar_area_3d
+    #tests
 
-tests.depends = wildstar_data
+#tests.depends = wildstar_data
 
 OTHER_FILES += \
     .qmake.conf \

@@ -10,14 +10,18 @@
 #include <QImage>
 
 #include "wildstar/data/area/c_area.h"
+#include "wildstar/data/area/c_chunk.h"
+#include "wildstar/data/c_array.h"
 
 using wildstar::data::area::CArea;
 using wildstar::data::area::CChunk;
+using wildstar::data::CArray;
 
 int main( int argc, char *argv[] )
 {
     QCoreApplication app(argc, argv);
     QCommandLineParser parser;
+    CChunk::HeighMap dummy; // dummy due to template issue not generating neccessary code
     //parser.setApplicationDescription( app.translate("main", "tool to do some basic actions on wildstar data files") );
     parser.addHelpOption();
     parser.addVersionOption();
